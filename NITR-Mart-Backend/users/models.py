@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
 import re
 
@@ -29,5 +30,16 @@ class User(AbstractUser):
     def clean(self):
         super().clean()
 
-        if self.email and self.email.endswith('@nitrkl.ac.in'):
-            raise ValueError("Email must be a valid NITRKL email address ending with @nitrkl.ac.in")
+        if self.email and not self.email.endswith('@nitrkl.ac.in'):
+            raise ValidationError({'email': 'Only @nitrkl.ac.in email addresses are allowed.'})
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.get_full_name()} ({self.email})"
+
+    @property
+    def full_name(self):
+        return f"{self.first_name} {self.last_name}".strip()

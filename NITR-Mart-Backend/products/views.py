@@ -7,7 +7,7 @@ from .serializers import ProductSerializer, CategorySerializer, ProductImageSeri
 
 
 class ProductListCreateView(APIView):
-    # permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def get(self, request):
         products = Product.objects.all()
@@ -49,7 +49,7 @@ class ProductListCreateView(APIView):
 
 
 class ProductDetailView(APIView):
-    # permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def get_object(self, id):
         return get_object_or_404(Product, id=id)

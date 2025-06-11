@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 
 
 class Category(models.Model):
@@ -15,7 +16,7 @@ class Product(models.Model):
     negotiable = models.BooleanField(default=False)
     image = models.ImageField(upload_to='products/images/', blank=True, null=True)
     category = models.ForeignKey('Category', on_delete=models.SET_NULL, null=True)
-    seller  = models.ForeignKey('auth.User', on_delete=models.CASCADE, related_name='products')
+    seller  = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='products')
     is_sold = models.BooleanField(default=False)
     posted_at = models.DateTimeField(auto_now_add=True)
 
