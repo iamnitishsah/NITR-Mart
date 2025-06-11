@@ -11,7 +11,7 @@ class User(AbstractUser):
 
     #for student profile
     year = models.CharField(max_length=10, blank=True, null=True)
-    branch = models.CharField(max_length=10, blank=True, null=True)
+    branch = models.CharField(max_length=20, blank=True, null=True)
     roll_no = models.CharField(max_length=15, blank=True, null=True)
 
     #for faculty profile
