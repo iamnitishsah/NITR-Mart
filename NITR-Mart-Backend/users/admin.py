@@ -1,34 +1,32 @@
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin
-from .models import User
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.utils.translation import gettext_lazy as _
+from .models import User
 
 
-class CustomUserAdmin(UserAdmin):
-    model = User
-
-    list_display = ('email', 'username', 'first_name', 'last_name', 'role', 'is_staff', 'is_verified')
-    list_filter = ('role', 'is_staff', 'is_active', 'is_verified')
+@admin.register(User)
+class CustomUserAdmin(BaseUserAdmin):
+    ordering = ['email']
+    list_display = ['email', 'first_name', 'last_name', 'is_staff', 'is_verified']
+    list_filter = ['is_staff', 'is_superuser', 'is_verified', 'branch', 'year']
+    search_fields = ['email', 'first_name', 'last_name', 'roll_no']
 
     fieldsets = (
-        (None, {'fields': ('email', 'username', 'password')}),
+        (None, {'fields': ('email', 'password')}),
         (_('Personal info'), {
-            'fields': ('first_name', 'last_name', 'bio', 'profile_picture', 'year', 'branch', 'roll_no', 'department', 'employee_id')
+            'fields': ('first_name', 'last_name', 'phone_number', 'year', 'branch', 'roll_no', 'bio', 'profile_picture')
         }),
         (_('Permissions'), {
-            'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions', 'is_verified')
+            'fields': ('is_active', 'is_staff', 'is_superuser', 'is_verified', 'groups', 'user_permissions')
         }),
-        (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
+        (_('Important dates'), {'fields': ('last_login', 'date_joined', 'created_at', 'updated_at')}),
     )
 
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'username', 'first_name', 'last_name', 'password1', 'password2', 'role', 'is_verified', 'is_active', 'is_staff')}
-        ),
+            'fields': ('email', 'first_name', 'last_name', 'year', 'branch', 'roll_no', 'password1', 'password2'),
+        }),
     )
 
-    search_fields = ('email', 'username', 'first_name', 'last_name')
-    ordering = ('email',)
-
-admin.site.register(User, CustomUserAdmin)
+    readonly_fields = ('created_at', 'updated_at')
