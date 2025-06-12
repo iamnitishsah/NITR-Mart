@@ -1,8 +1,8 @@
 "use client";
-import Login from "./auth/login/page";
 import Footer from "./components/footer/page";
 import Navbar from "./components/navbar/page";
-// import Dashboard from "./pages/dashboard/page";
+import WelcomePage from "./pages/welcome/page";
+
 
 const Home = () => {
  
@@ -10,8 +10,7 @@ const Home = () => {
   return (
    <div>
     <Navbar/>
-    {/* <Dashboard/> */}
-    <Login/>
+    <WelcomePage/>
     <Footer/>
    </div>
   );
