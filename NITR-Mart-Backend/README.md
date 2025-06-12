@@ -1,40 +1,33 @@
 # 📦 NITRMart API Documentation
 
-Backend API for NITRMart, a platform for students to buy and sell items securely.
+Backend API for **NITRMart**, a platform for NIT Rourkela students to buy and sell items securely.
 
-
-# User Management API
-
-This API allows users to register, login, and manage their profiles securely using JWT authentication.
-
----
 ## 🌐 Base URL
+
 ```
 http://127.0.0.1:8000/
 ```
----
 
 ## 🔐 Authentication
 
-All endpoints (except registration and login) require **JWT authentication**.
-
-### Example Header:
+All endpoints (except registration, login, token refresh, and product listing) require **JWT authentication**.  
+Include the token in the Authorization header:
 
 ```
-
-Authorization: Bearer \<your\_access\_token>
-
-````
+Authorization: Bearer <your_access_token>
+```
 
 ---
 
-## 👤 User Management Endpoints
+## 👤 User Management API
+
+This API allows users to register, log in, and manage their profiles securely using JWT authentication.
 
 ### 1. 🚀 Register a New User
 
-- **Endpoint:** `/users/`
-- **Method:** `POST`
-- **Permissions:** `AllowAny`
+- **Endpoint:** `/users/`  
+- **Method:** `POST`  
+- **Permissions:** `AllowAny`  
 - **Description:** Registers a new user with an `@nitrkl.ac.in` email.
 
 #### ✅ Request Body:
@@ -52,7 +45,7 @@ Authorization: Bearer \<your\_access\_token>
   "bio": "Short bio",
   "profile_picture": "<file>"
 }
-````
+```
 
 #### 📤 Response (201 Created):
 
@@ -74,9 +67,7 @@ Authorization: Bearer \<your\_access\_token>
 
 ```json
 // Invalid Email
-{
-  "email": "Only @nitrkl.ac.in email addresses are allowed."
-}
+{ "email": "Only @nitrkl.ac.in email addresses are allowed." }
 
 // Missing Fields
 {
@@ -85,14 +76,12 @@ Authorization: Bearer \<your\_access\_token>
 }
 ```
 
----
-
 ### 2. 🔑 Login
 
-* **Endpoint:** `/users/token/`
-* **Method:** `POST`
-* **Permissions:** `AllowAny`
-* **Description:** Authenticates user and returns JWT tokens.
+- **Endpoint:** `/users/token/`  
+- **Method:** `POST`  
+- **Permissions:** `AllowAny`  
+- **Description:** Authenticates a user and returns JWT tokens.
 
 #### ✅ Request Body:
 
@@ -115,34 +104,26 @@ Authorization: Bearer \<your\_access\_token>
 #### ❌ Error Response:
 
 ```json
-{
-  "detail": "No active account found with the given credentials"
-}
+{ "detail": "No active account found with the given credentials" }
 ```
-
----
 
 ### 3. 🔁 Refresh Token
 
-* **Endpoint:** `/users/token/refresh/`
-* **Method:** `POST`
-* **Permissions:** `AllowAny`
-* **Description:** Returns new access token using a valid refresh token.
+- **Endpoint:** `/users/token/refresh/`  
+- **Method:** `POST`  
+- **Permissions:** `AllowAny`  
+- **Description:** Returns a new access token using a valid refresh token.
 
 #### ✅ Request Body:
 
 ```json
-{
-  "refresh": "<refresh_token>"
-}
+{ "refresh": "<refresh_token>" }
 ```
 
 #### 📤 Response (200 OK):
 
 ```json
-{
-  "access": "<new_access_token>"
-}
+{ "access": "<new_access_token>" }
 ```
 
 #### ❌ Error Response:
@@ -154,16 +135,12 @@ Authorization: Bearer \<your\_access\_token>
 }
 ```
 
----
-
 ### 4. 🧾 Get or Update Profile
 
-* **Endpoint:** `/users/<id>/`
-* **Methods:** `GET`, `PATCH`
-* **Permissions:** `IsAuthenticated`
-* **Description:** View or update the user’s own profile. Non-admin users cannot access others’ profiles.
-
----
+- **Endpoint:** `/users/<id>/`  
+- **Methods:** `GET`, `PATCH`  
+- **Permissions:** `IsAuthenticated`  
+- **Description:** View or update the user’s own profile.
 
 #### ✅ PATCH Request Body (for Update):
 
@@ -195,34 +172,148 @@ Authorization: Bearer \<your\_access\_token>
   "roll_no": "123456",
   "phone_number": "9876543210",
   "bio": "Updated bio",
-  "profile_picture": "http://your-domain.com/media/profile_pictures/user.jpg",
+  "profile_picture": "http://127.0.0.1:8000/media/profile_pictures/user.jpg",
   "is_verified": false,
-  "created_at": "2024-06-01T08:30:00Z",
-  "updated_at": "2024-06-12T09:00:00Z"
+  "created_at": "2025-06-01T12:30:00Z",
+  "updated_at": "2025-06-12T17:00:00Z"
 }
 ```
 
 #### ❌ Error Responses:
 
 ```json
-// Missing Current Password for Password Change
-{
-  "current_password": "Current password is required to update the password."
-}
+// Missing Current Password
+{ "current_password": "Current password is required to update the password." }
 
 // Incorrect Current Password
-{
-  "current_password": "Current password is incorrect."
-}
+{ "current_password": "Current password is incorrect." }
 
 // Unauthorized
-{
-  "detail": "Authentication credentials were not provided."
-}
+{ "detail": "Authentication credentials were not provided." }
 
 // Forbidden
+{ "detail": "You do not have permission to perform this action." }
+```
+
+---
+
+## 🛍️ Product Management API
+
+This API allows users to list, create, view, and update products for sale.
+
+### 1. 📋 List Products
+
+- **Endpoint:** `/products/`  
+- **Method:** `GET`  
+- **Permissions:** `AllowAny`  
+- **Description:** Retrieves all unsold products.
+
+#### 📤 Response (200 OK):
+
+```json
+[
+  {
+    "id": 1,
+    "title": "Laptop",
+    "description": "Dell XPS 13, 16GB RAM",
+    "price": "500.00",
+    "negotiable": true,
+    "image": "http://127.0.0.1:8000/media/products/images/laptop.jpg",
+    "category": "Electronics",
+    "seller": "user@nitrkl.ac.in",
+    "is_sold": false,
+    "posted_at": "2025-06-12T12:30:00Z"
+  }
+]
+```
+
+### 2. 🆕 Create a Product
+
+- **Endpoint:** `/products/`  
+- **Method:** `POST`  
+- **Permissions:** `IsAuthenticated`  
+- **Description:** Creates a new product listing. The seller is automatically set to the authenticated user.
+
+
+**Allowed Categories:**
+- Electronics  
+- Books & Study Materials  
+- Hostel Essentials  
+- Furniture  
+- Clothing & Accessories  
+- Sports & Fitness  
+- Cycle & Transport  
+- Room Decor  
+- Stationery  
+- Lab Equipment  
+- Event Costumes  
+- Others
+
+
+
+#### ✅ Request Body:
+
+```json
 {
-  "detail": "You do not have permission to perform this action."
+  "title": "Bicycle",
+  "description": "Hero Ranger, good condition",
+  "price": 100.00,
+  "negotiable": true,
+  "category": "Cycle & Transport",
+  "image": "<file>"
+}
+```
+
+#### 📤 Response (201 Created):
+
+```json
+{
+  "id": 3,
+  "title": "Bicycle",
+  "description": "Hero Ranger, good condition",
+  "price": "100.00",
+  "negotiable": true,
+  "image": "http://127.0.0.1:8000/media/products/images/bicycle.jpg",
+  "category": "Cycle & Transport",
+  "seller": "user@nitrkl.ac.in",
+  "is_sold": false,
+  "posted_at": "2025-06-12T17:30:00Z"
+}
+```
+
+### 3. 🔍 Get or Update Product
+
+- **Endpoint:** `/products/<id>/`  
+- **Methods:** `GET`, `PATCH`  
+- **Permissions:** `IsAuthenticated`  
+- **Description:** View or update a product. Only seller can modify.
+
+#### ✅ PATCH Request Body:
+
+```json
+{
+  "title": "Updated Bicycle",
+  "price": 90.00,
+  "category": "Others",
+  "is_sold": true,
+  "image": "<file>"
+}
+```
+
+#### 📤 Response (200 OK):
+
+```json
+{
+  "id": 3,
+  "title": "Updated Bicycle",
+  "description": "Hero Ranger, good condition",
+  "price": "90.00",
+  "negotiable": true,
+  "image": "http://127.0.0.1:8000/media/products/images/bicycle_updated.jpg",
+  "category": "Others",
+  "seller": "user@nitrkl.ac.in",
+  "is_sold": true,
+  "posted_at": "2025-06-12T17:30:00Z"
 }
 ```
 
@@ -230,22 +321,9 @@ Authorization: Bearer \<your\_access\_token>
 
 ## ⚙️ Notes
 
-* ✅ **Email Restriction:** Only emails ending with `@nitrkl.ac.in` are allowed.
-* 🖼️ **Profile Pictures:** Stored in `/media/profile_pictures/` and returned as URLs.
-* 🔐 **JWT Expiry:**
-
-  * Access tokens: 60 minutes
-  * Refresh tokens: 7 days
-
-* ⚠️ **Error Handling:** All errors return descriptive messages and appropriate HTTP status codes.
-
----
-
-## 🛠️ Tech Stack
-
-* Django REST Framework
-* JWT Authentication (`djangorestframework-simplejwt`)
-* PostgreSQL
-* Cloud/File storage (for `profile_picture`)
-
----
+- ✅ **Email Restriction:** Only `@nitrkl.ac.in` emails are allowed for registration.
+- 🔐 **JWT Expiry:**
+  - Access tokens: 60 minutes
+  - Refresh tokens: 7 days
+- ⚠️ **Error Handling:** Returns descriptive messages with appropriate HTTP status codes.
+- 📸 **Image Uploads:** Use multipart/form-data for file uploads in requests.
