@@ -1,299 +1,251 @@
-# NITRMart API Documentation
+# 📦 NITRMart API Documentation
 
-## Overview
-NITRMart is a marketplace platform for NIT Rourkela students and faculty. This document provides comprehensive API documentation for frontend developers to integrate with the backend system.
+Backend API for NITRMart, a platform for students to buy and sell items securely.
 
-## Base URL
-`http://your-domain.com/api/`
 
-## Authentication
-All endpoints (except login/register) require JWT authentication. Include the token in the Authorization header:
+# User Management API
+
+This API allows users to register, login, and manage their profiles securely using JWT authentication.
+
+---
+## 🌐 Base URL
 ```
-Authorization: Bearer <your_access_token>
+http://127.0.0.1:8000/
+```
+---
+
+## 🔐 Authentication
+
+All endpoints (except registration and login) require **JWT authentication**.
+
+### Example Header:
+
 ```
 
-## User Management
+Authorization: Bearer \<your\_access\_token>
 
-### 1. Register a New User
-**Endpoint**: `/users/register/`  
-**Method**: POST  
-**Permissions**: AllowAny  
-**Request Body**:
+````
+
+---
+
+## 👤 User Management Endpoints
+
+### 1. 🚀 Register a New User
+
+- **Endpoint:** `/users/`
+- **Method:** `POST`
+- **Permissions:** `AllowAny`
+- **Description:** Registers a new user with an `@nitrkl.ac.in` email.
+
+#### ✅ Request Body:
+
 ```json
 {
-    "username": "string",
-    "email": "string@nitrkl.ac.in",
-    "password": "string",
-    "confirm_password": "string",
-    "first_name": "string",
-    "last_name": "string",
-    "role": "student|faculty|staff",
-    
-    // Student specific fields
-    "year": "string", // required if role=student
-    "branch": "string", // required if role=student
-    "roll_no": "string", // optional
-    
-    // Faculty/Staff specific fields
-    "department": "string", // required if role=faculty or staff
-    "employee_id": "string", // optional
-    
-    "bio": "string", // optional
-    "profile_picture": file // optional
+  "email": "user@nitrkl.ac.in",
+  "password": "your_password",
+  "first_name": "John",
+  "last_name": "Doe",
+  "year": "2nd",
+  "branch": "Biotechnology",
+  "roll_no": "123456",
+  "phone_number": "1234567890",
+  "bio": "Short bio",
+  "profile_picture": "<file>"
+}
+````
+
+#### 📤 Response (201 Created):
+
+```json
+{
+  "email": "user@nitrkl.ac.in",
+  "first_name": "John",
+  "last_name": "Doe",
+  "year": "2nd",
+  "branch": "Biotechnology",
+  "roll_no": "123456",
+  "phone_number": "1234567890",
+  "bio": "Short bio",
+  "profile_picture": "http://127.0.0.1:8000/media/profile_pictures/user.jpg"
 }
 ```
 
-**Response**:
+#### ❌ Error Responses:
+
 ```json
+// Invalid Email
 {
-    "message": "Registration successful",
-    "user": {
-        "id": 1,
-        "username": "string",
-        "email": "string@nitrkl.ac.in",
-        "first_name": "string",
-        "last_name": "string",
-        "full_name": "string",
-        "role": "student",
-        "year": "string",
-        "branch": "string",
-        "roll_no": "string",
-        "department": "string",
-        "employee_id": "string",
-        "profile_picture": "url",
-        "bio": "string",
-        "is_verified": false,
-        "created_at": "datetime"
-    },
-    "tokens": {
-        "refresh": "string",
-        "access": "string"
-    }
+  "email": "Only @nitrkl.ac.in email addresses are allowed."
+}
+
+// Missing Fields
+{
+  "email": ["This field is required."],
+  "first_name": ["This field is required."]
 }
 ```
 
-### 2. Login
-**Endpoint**: `/users/login/`  
-**Method**: POST  
-**Permissions**: AllowAny  
-**Request Body**:
+---
+
+### 2. 🔑 Login
+
+* **Endpoint:** `/users/token/`
+* **Method:** `POST`
+* **Permissions:** `AllowAny`
+* **Description:** Authenticates user and returns JWT tokens.
+
+#### ✅ Request Body:
+
 ```json
 {
-    "email": "string@nitrkl.ac.in",
-    "password": "string"
+  "email": "user@nitrkl.ac.in",
+  "password": "your_password"
 }
 ```
 
-**Response**:
+#### 📤 Response (200 OK):
+
 ```json
 {
-    "message": "Login successful",
-    "user": {
-        // Same user object as registration
-    },
-    "tokens": {
-        "refresh": "string",
-        "access": "string"
-    }
+  "refresh": "<refresh_token>",
+  "access": "<access_token>"
 }
 ```
 
-### 3. Refresh Token
-**Endpoint**: `/users/token/refresh/`  
-**Method**: POST  
-**Permissions**: AllowAny  
-**Request Body**:
+#### ❌ Error Response:
+
 ```json
 {
-    "refresh": "string"
+  "detail": "No active account found with the given credentials"
 }
 ```
 
-**Response**:
+---
+
+### 3. 🔁 Refresh Token
+
+* **Endpoint:** `/users/token/refresh/`
+* **Method:** `POST`
+* **Permissions:** `AllowAny`
+* **Description:** Returns new access token using a valid refresh token.
+
+#### ✅ Request Body:
+
 ```json
 {
-    "access": "string"
+  "refresh": "<refresh_token>"
 }
 ```
 
-### 4. Logout
-**Endpoint**: `/users/logout/`  
-**Method**: POST  
-**Permissions**: IsAuthenticated  
-**Request Body**:
+#### 📤 Response (200 OK):
+
 ```json
 {
-    "refresh": "string"
+  "access": "<new_access_token>"
 }
 ```
 
-**Response**:
+#### ❌ Error Response:
+
 ```json
 {
-    "message": "Logout successful"
+  "detail": "Token is invalid or expired",
+  "code": "token_not_valid"
 }
 ```
 
-### 5. Get/Update Profile
-**Endpoint**: `/users/profile/`  
-**Methods**: 
-- GET: Retrieve user profile
-- PUT/PATCH: Update profile
+---
 
-**Permissions**: IsAuthenticated  
-**Request Body (for update)**:
+### 4. 🧾 Get or Update Profile
+
+* **Endpoint:** `/users/<id>/`
+* **Methods:** `GET`, `PATCH`
+* **Permissions:** `IsAuthenticated`
+* **Description:** View or update the user’s own profile. Non-admin users cannot access others’ profiles.
+
+---
+
+#### ✅ PATCH Request Body (for Update):
+
 ```json
 {
-    "first_name": "string",
-    "last_name": "string",
-    "year": "string",
-    "branch": "string",
-    "roll_no": "string",
-    "department": "string",
-    "employee_id": "string",
-    "bio": "string",
-    "profile_picture": file
+  "first_name": "Jane",
+  "last_name": "Doe",
+  "year": "3rd",
+  "branch": "ECE",
+  "roll_no": "123456",
+  "phone_number": "9876543210",
+  "bio": "Updated bio",
+  "profile_picture": "<file>",
+  "password": "new_password",
+  "current_password": "old_password"
 }
 ```
 
-**Response**:
+#### 📤 Response (200 OK):
+
 ```json
 {
-    // Same user object as registration
+  "id": 1,
+  "email": "user@nitrkl.ac.in",
+  "first_name": "Jane",
+  "last_name": "Doe",
+  "year": "3rd",
+  "branch": "ECE",
+  "roll_no": "123456",
+  "phone_number": "9876543210",
+  "bio": "Updated bio",
+  "profile_picture": "http://your-domain.com/media/profile_pictures/user.jpg",
+  "is_verified": false,
+  "created_at": "2024-06-01T08:30:00Z",
+  "updated_at": "2024-06-12T09:00:00Z"
 }
 ```
 
-### 6. Change Password
-**Endpoint**: `/users/change-password/`  
-**Method**: POST  
-**Permissions**: IsAuthenticated  
-**Request Body**:
+#### ❌ Error Responses:
+
 ```json
+// Missing Current Password for Password Change
 {
-    "old_password": "string",
-    "new_password": "string",
-    "new_password_confirm": "string"
+  "current_password": "Current password is required to update the password."
+}
+
+// Incorrect Current Password
+{
+  "current_password": "Current password is incorrect."
+}
+
+// Unauthorized
+{
+  "detail": "Authentication credentials were not provided."
+}
+
+// Forbidden
+{
+  "detail": "You do not have permission to perform this action."
 }
 ```
 
-**Response**:
-```json
-{
-    "message": "Password changed successfully"
-}
-```
+---
 
-## Product Management
+## ⚙️ Notes
 
-### 1. List/Create Products
-**Endpoint**: `/products/`  
-**Methods**: 
-- GET: List all products
-- POST: Create new product
+* ✅ **Email Restriction:** Only emails ending with `@nitrkl.ac.in` are allowed.
+* 🖼️ **Profile Pictures:** Stored in `/media/profile_pictures/` and returned as URLs.
+* 🔐 **JWT Expiry:**
 
-**Permissions**: 
-- GET: AllowAny
-- POST: IsAuthenticated
+  * Access tokens: 60 minutes
+  * Refresh tokens: 7 days
 
-**Request Body (for create)**:
-```json
-{
-    "title": "string",
-    "description": "string",
-    "price": "decimal",
-    "negotiable": boolean,
-    "category_id": integer,
-    "image": file, // main image
-    "images": [files] // additional images
-}
-```
+* ⚠️ **Error Handling:** All errors return descriptive messages and appropriate HTTP status codes.
 
-**Response (for create)**:
-```json
-{
-    "id": 1,
-    "title": "string",
-    "description": "string",
-    "price": "decimal",
-    "negotiable": boolean,
-    "image": "url",
-    "category": {
-        "id": 1,
-        "name": "string"
-    },
-    "seller": integer,
-    "seller_name": "string",
-    "is_sold": false,
-    "posted_at": "datetime",
-    "images": [
-        {
-            "id": 1,
-            "image": "url"
-        }
-    ]
-}
-```
+---
 
-### 2. Retrieve/Update/Delete Product
-**Endpoint**: `/products/<id>/`  
-**Methods**: 
-- GET: Retrieve product details
-- PUT/PATCH: Update product
-- DELETE: Delete product
+## 🛠️ Tech Stack
 
-**Permissions**: 
-- GET: AllowAny
-- PUT/PATCH/DELETE: IsAuthenticated (only seller can modify)
+* Django REST Framework
+* JWT Authentication (`djangorestframework-simplejwt`)
+* PostgreSQL
+* Cloud/File storage (for `profile_picture`)
 
-**Request Body (for update)**:
-```json
-{
-    "title": "string",
-    "description": "string",
-    "price": "decimal",
-    "negotiable": boolean,
-    "category_id": integer,
-    "image": file,
-    "images": [files] // additional images to add
-}
-```
-
-**Response (for GET)**:
-```json
-{
-    // Same as product create response
-}
-```
-
-## Error Responses
-All error responses follow this format:
-```json
-{
-    "error": "Error message",
-    // or
-    "field_name": ["Error message"]
-}
-```
-
-## Media Handling
-- Profile pictures are uploaded to `/media/profile_pictures/`
-- Product images are uploaded to `/media/products/images/`
-
-## Important Notes
-1. All email addresses must be `@nitrkl.ac.in` domains
-2. JWT tokens expire after 60 minutes (access) and 7 days (refresh)
-3. Password requirements:
-   - Minimum 8 characters
-   - Cannot be too similar to user attributes
-   - Cannot be entirely numeric
-   - Cannot be a common password
-
-## Setup Instructions (for reference)
-1. Clone the repository
-2. Install dependencies: `pip install -r requirements.txt`
-3. Run migrations: `python manage.py migrate`
-4. Start server: `python manage.py runserver`
-
-The API will be available at `http://localhost:8000/` by default.
-
-Let me know if you need any clarification or additional details for the frontend implementation!
+---
