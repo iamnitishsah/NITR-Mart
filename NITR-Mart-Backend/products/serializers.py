@@ -1,54 +1,60 @@
 from rest_framework import serializers
-from .models import Product, Category, ProductImage
+from django.contrib.auth import get_user_model
+from .models import Product, CATEGORIES
 
-
-class CategorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Category
-        fields = ['id', 'name']
-        read_only_fields = ['id']
-
-
-class ProductImageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ProductImage
-        fields = ['id', 'image']
-        read_only_fields = ['id']
-
+User = get_user_model()
 
 class ProductSerializer(serializers.ModelSerializer):
-    category = CategorySerializer(read_only=True)
-    category_id = serializers.IntegerField(write_only=True, required=False)
-    images = ProductImageSerializer(many=True, read_only=True)
-    seller_name = serializers.CharField(source='seller.username', read_only=True)
+    seller = serializers.StringRelatedField(read_only=True)
+    image = serializers.ImageField(required=False, allow_null=True)
+    category = serializers.ChoiceField(choices=CATEGORIES)
 
     class Meta:
         model = Product
         fields = [
-            'id', 'title', 'description', 'price', 'negotiable',
-            'image', 'category', 'category_id', 'seller', 'seller_name',
-            'is_sold', 'posted_at', 'images'
+            'id', 'title', 'description', 'price', 'negotiable', 'image',
+            'category', 'seller', 'is_sold', 'posted_at'
         ]
-        read_only_fields = ['id', 'seller', 'posted_at']
+        read_only_fields = ['id', 'seller', 'posted_at', 'is_sold']
+
+    def validate_price(self, value):
+        if value < 0:
+            raise serializers.ValidationError('Price cannot be negative.')
+        return value
+
+class ProductCreateSerializer(serializers.ModelSerializer):
+    image = serializers.ImageField(required=False, allow_null=True)
+    category = serializers.ChoiceField(choices=CATEGORIES)
+
+    class Meta:
+        model = Product
+        fields = [
+            'title', 'description', 'price', 'negotiable', 'image',
+            'category'
+        ]
+
+    def validate_price(self, value):
+        if value < 0:
+            raise serializers.ValidationError('Price cannot be negative.')
+        return value
 
     def create(self, validated_data):
-        category_id = validated_data.pop('category_id', None)
-        if category_id:
-            try:
-                category = Category.objects.get(id=category_id)
-                validated_data['category'] = category
-            except Category.DoesNotExist:
-                raise serializers.ValidationError({'category_id': 'Category not found'})
+        validated_data['seller'] = self.context['request'].user
+        return Product.objects.create(**validated_data)
 
-        return super().create(validated_data)
+class ProductUpdateSerializer(serializers.ModelSerializer):
+    image = serializers.ImageField(required=False, allow_null=True)
+    category = serializers.ChoiceField(choices=CATEGORIES, required=False)
 
-    def update(self, instance, validated_data):
-        category_id = validated_data.pop('category_id', None)
-        if category_id:
-            try:
-                category = Category.objects.get(id=category_id)
-                validated_data['category'] = category
-            except Category.DoesNotExist:
-                raise serializers.ValidationError({'category_id': 'Category not found'})
+    class Meta:
+        model = Product
+        fields = [
+            'title', 'description', 'price', 'negotiable', 'image',
+            'category', 'is_sold'
+        ]
+        read_only_fields = ['seller']
 
-        return super().update(instance, validated_data)
+    def validate_price(self, value):
+        if value < 0:
+            raise serializers.ValidationError('Price cannot be negative.')
+        return value

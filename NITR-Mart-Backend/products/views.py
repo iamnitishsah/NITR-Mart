@@ -1,124 +1,36 @@
-from rest_framework.views import APIView
+from rest_framework import generics, permissions
 from rest_framework.response import Response
-from rest_framework import status, permissions
-from django.shortcuts import get_object_or_404
-from .models import Product, Category, ProductImage
-from .serializers import ProductSerializer, CategorySerializer, ProductImageSerializer
+from rest_framework import status
+from .models import Product
+from .serializers import ProductSerializer, ProductCreateSerializer, ProductUpdateSerializer
 
-
-class ProductListCreateView(APIView):
+class ProductListCreateView(generics.ListCreateAPIView):
+    queryset = Product.objects.filter(is_sold=False)
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-    def get(self, request):
-        products = Product.objects.all()
-        serializer = ProductSerializer(products, many=True, context={'request': request})
-        return Response(serializer.data)
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            return ProductCreateSerializer
+        return ProductSerializer
 
-    def post(self, request):
-        if not request.user.is_authenticated:
-            return Response(
-                {'error': 'Authentication required'},
-                status=status.HTTP_401_UNAUTHORIZED
-            )
+    def perform_create(self, serializer):
+        serializer.save(seller=self.request.user)
 
-        data = request.data.copy()
+class ProductRetrieveUpdateView(generics.RetrieveUpdateAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductUpdateSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
-        category_id = data.get('category')
-        if category_id:
-            try:
-                category = Category.objects.get(id=category_id)
-                data['category'] = category.id
-            except Category.DoesNotExist:
-                return Response(
-                    {'error': 'Category not found'},
-                    status=status.HTTP_400_BAD_REQUEST
-                )
+    def get_object(self):
+        obj = super().get_object()
+        if self.request.user != obj.seller and not (self.request.user.is_staff or self.request.user.is_superuser):
+            self.permission_denied(self.request, message="You can only edit your own products.")
+        return obj
 
-        serializer = ProductSerializer(data=data, context={'request': request})
-        if serializer.is_valid():
-            product = serializer.save(seller=request.user)
-
-            images = request.FILES.getlist('images')
-            for image in images:
-                ProductImage.objects.create(product=product, image=image)
-
-            response_serializer = ProductSerializer(product, context={'request': request})
-            return Response(response_serializer.data, status=status.HTTP_201_CREATED)
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-class ProductDetailView(APIView):
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-
-    def get_object(self, id):
-        return get_object_or_404(Product, id=id)
-
-    def get(self, request, id):
-        product = self.get_object(id)
-        serializer = ProductSerializer(product, context={'request': request})
-        return Response(serializer.data)
-
-    def put(self, request, id):
-        if not request.user.is_authenticated:
-            return Response(
-                {'error': 'Authentication required'},
-                status=status.HTTP_401_UNAUTHORIZED
-            )
-
-        product = self.get_object(id)
-
-        if product.seller != request.user:
-            return Response(
-                {'error': 'Permission denied'},
-                status=status.HTTP_403_FORBIDDEN
-            )
-
-        data = request.data.copy()
-
-        category_id = data.get('category')
-        if category_id:
-            try:
-                category = Category.objects.get(id=category_id)
-                data['category'] = category.id
-            except Category.DoesNotExist:
-                return Response(
-                    {'error': 'Category not found'},
-                    status=status.HTTP_400_BAD_REQUEST
-                )
-
-        serializer = ProductSerializer(product, data=data, partial=True, context={'request': request})
-        if serializer.is_valid():
-            updated_product = serializer.save()
-
-            if 'images' in request.FILES:
-
-                images = request.FILES.getlist('images')
-                for image in images:
-                    ProductImage.objects.create(product=updated_product, image=image)
-
-            response_serializer = ProductSerializer(updated_product, context={'request': request})
-            return Response(response_serializer.data)
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def patch(self, request, id):
-        return self.put(request, id)
-
-    def delete(self, request, id):
-        if not request.user.is_authenticated:
-            return Response(
-                {'error': 'Authentication required'},
-                status=status.HTTP_401_UNAUTHORIZED
-            )
-
-        product = self.get_object(id)
-
-        if product.seller != request.user:
-            return Response(
-                {'error': 'Permission denied'},
-                status=status.HTTP_403_FORBIDDEN
-            )
-
-        product.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(ProductSerializer(instance).data, status=status.HTTP_200_OK)
