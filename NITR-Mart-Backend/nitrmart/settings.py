@@ -22,7 +22,6 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'users',     # Custom app for user management
     'products',  # Custom app for products
-    'chats',  # Custom app for chats
     'reports',   # Custom app for reports
 ]
 
