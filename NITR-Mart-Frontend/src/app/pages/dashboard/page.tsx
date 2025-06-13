@@ -121,79 +121,132 @@ const Dashboard = () => {
           </h1>
         </div>
 
-        {user ? (
-          <>
-            <div className="bg-gray-900/50 backdrop-blur-xl rounded-3xl border border-gray-700/50 shadow-2xl mb-8 p-6">
-              <div className="flex flex-col md:flex-row justify-between items-center">
-                <div className="flex items-center mb-4 md:mb-0">
-                  <div className="w-12 h-12 bg-gradient-to-r from-cyan-500 to-emerald-500 rounded-full flex items-center justify-center mr-4">
-                    <Users className="w-6 h-6 text-white" />
-                  </div>
-                  <div>
-                    <h2 className="text-2xl font-bold text-white">
-                      Welcome back, {user.firstName} {user.lastName}!
-                    </h2>
-                    <p className="text-gray-400">{user.email}</p>
-                    <p className="text-gray-400">{user.rollNo} · {user.branch}</p>
-                  </div>
-                </div>
-                <div className="flex space-x-4">
-                  <button
-                    onClick={() => router.push("/pages/sell")}
-                    className="flex items-center px-6 py-3 bg-gradient-to-r from-cyan-500 to-emerald-600 text-white rounded-xl font-semibold hover:from-cyan-600 hover:to-emerald-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
-                  >
-                    <Plus className="w-5 h-5 mr-2" />
-                    Add Product
-                  </button>
-                  <button
-                    onClick={handleLogout}
-                    className="flex items-center px-6 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-xl font-semibold transition-all duration-300"
-                  >
-                    <LogOut className="w-5 h-5 mr-2" />
-                    Logout
-                  </button>
-                </div>
+{user ? (
+  <>
+    {/* Enhanced User Profile Card */}
+    <div className="bg-gradient-to-r from-gray-900/80 via-gray-800/80 to-gray-900/80 backdrop-blur-xl rounded-3xl border border-gray-700/50 shadow-2xl mb-8 overflow-hidden">
+      {/* Profile Header with Gradient Background */}
+      <div className="relative bg-gradient-to-r from-cyan-500/20 via-emerald-500/20 to-blue-500/20 px-8 py-6">
+        <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 to-emerald-500/10 backdrop-blur-sm"></div>
+        
+        <div className="relative flex flex-col lg:flex-row items-center justify-between">
+          {/* Left Section - User Info */}
+          <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-6 mb-6 lg:mb-0">
+            {/* Enhanced Avatar */}
+            <div className="relative">
+              <div className="w-20 h-20 bg-gradient-to-br from-cyan-400 via-emerald-500 to-sky-600 rounded-2xl flex items-center justify-center shadow-2xl transform hover:scale-105 transition-all duration-300">
+                <span className="text-2xl font-bold text-white font-serif capitalize ">
+                  {user.firstName.charAt(0)}{user.lastName.charAt(0)}
+                </span>
+              </div>
+              {/* Online Status Indicator */}
+              <div className="absolute -top-1 -right-1 w-6 h-6 bg-cyan-500 rounded-full border-3 border-gray-900 flex items-center justify-center">
+                <div className="w-3 h-3 bg-emerald-400 rounded-full animate-pulse"></div>
               </div>
             </div>
 
-            <div className="flex flex-col lg:flex-row gap-6 bg-gray-900/50 backdrop-blur-xl rounded-3xl border border-gray-700/50 shadow-2xl mt-8 p-6">
-              <div className="flex-1">
-                <div className="relative">
-                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                  <input
-                    type="text"
-                    placeholder="Search products..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-12 pr-4 py-3 bg-gray-800 border-2 border-gray-600 rounded-xl text-white placeholder-gray-400 focus:border-cyan-500 focus:outline-none focus:ring-4 focus:ring-cyan-500/20 transition-all duration-300"
-                  />
-                </div>
+            {/* User Details */}
+            <div className="text-center sm:text-left">
+              <div className="flex items-center justify-center sm:justify-start space-x-2 mb-2">
+                <h2 className="font-mono text-3xl font-bold bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent">
+                  {user.firstName} {user.lastName}
+                </h2>
+                
               </div>
-
-              <div className="flex flex-wrap gap-2">
-                {categories.map((category) => {
-                  const IconComponent = category.icon;
-                  return (
-                    <button
-                      key={category.value}
-                      onClick={() => setSelectedCategory(category.value)}
-                      className={`flex items-center px-4 py-3 rounded-xl font-semibold transition-all duration-300 ${
-                        selectedCategory === category.value
-                          ? "bg-gradient-to-r from-cyan-500 to-emerald-600 text-white shadow-lg"
-                          : "bg-gray-800 text-gray-300 hover:bg-gray-700"
-                      }`}
-                    >
-                      <IconComponent className="w-4 h-4 mr-2" />
-                      {category.label}
-                    </button>
-                  );
-                })}
+              
+              <div className="space-y-1">
+                <div className="flex items-center justify-center sm:justify-start space-x-2">
+                  <div className="w-2 h-2 bg-cyan-400 rounded-full"></div>
+                  <p className="text-gray-300 font-medium">{user.email}</p>
+                </div>
+                
+                {user.rollNo && (
+                  <div className="flex items-center justify-center sm:justify-start space-x-2">
+                    <div className="w-2 h-2 bg-pink-400 rounded-full"></div>
+                    <p className="text-gray-400">
+                      <span className="text-gray-300 font-medium">Roll No:</span> {user.rollNo}
+                    </p>
+                  </div>
+                )}
+                
+                {user.branch && (
+                  <div className="flex items-center justify-center sm:justify-start space-x-2">
+                    <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                    <p className="text-gray-400">
+                      <span className="text-gray-300 font-medium">Branch:</span> {user.branch}
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
-          </>
-        ) : (
-          <Login />
-        )}
+          </div>
+
+          {/* Right Section - Action Buttons */}
+          <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
+            <button
+              onClick={() => router.push("/pages/sell")}
+              className="group flex items-center px-6 py-3 bg-gradient-to-r from-cyan-500 to-emerald-600 text-white rounded-xl font-semibold hover:from-cyan-600 hover:to-emerald-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 hover:-translate-y-1"
+            >
+              <Plus className="w-5 h-5 mr-2 group-hover:rotate-90 transition-transform duration-300" />
+              Add Product
+              <div className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                ✨
+              </div>
+            </button>
+            
+            <button
+              onClick={handleLogout}
+              className="group flex items-center px-6 py-3 bg-gray-700/80 hover:bg-red-600/80 text-white rounded-xl font-semibold transition-all duration-300 backdrop-blur-sm border border-gray-600/50 hover:border-red-500/50"
+            >
+              <LogOut className="w-5 h-5 mr-2 group-hover:translate-x-1 transition-transform duration-300" />
+              Logout
+            </button>
+          </div>
+        </div>
+      </div>
+
+   
+    </div>
+
+    {/* Search and Filter Section - Keep existing code */}
+    <div className="flex flex-col lg:flex-row gap-6 bg-gray-900/50 backdrop-blur-xl rounded-3xl border border-gray-700/50 shadow-2xl mt-8 p-6">
+      <div className="flex-1">
+        <div className="relative">
+          <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+          <input
+            type="text"
+            placeholder="Search products..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full pl-12 pr-4 py-3 bg-gray-800 border-2 border-gray-600 rounded-xl text-white placeholder-gray-400 focus:border-cyan-500 focus:outline-none focus:ring-4 focus:ring-cyan-500/20 transition-all duration-300"
+          />
+        </div>
+      </div>
+
+      <div className="flex flex-wrap gap-2">
+        {categories.map((category) => {
+          const IconComponent = category.icon;
+          return (
+            <button
+              key={category.value}
+              onClick={() => setSelectedCategory(category.value)}
+              className={`flex items-center px-4 py-3 rounded-xl font-semibold transition-all duration-300 ${
+                selectedCategory === category.value
+                  ? "bg-gradient-to-r from-cyan-500 to-emerald-600 text-white shadow-lg"
+                  : "bg-gray-800 text-gray-300 hover:bg-gray-700"
+              }`}
+            >
+              <IconComponent className="w-4 h-4 mr-2" />
+              {category.label}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  </>
+) : (
+  <Login />
+)}
       </div>
     </div>
   );
