@@ -106,8 +106,9 @@ const Sell = () => {
     try {
       const response = await fetch('http://127.0.0.1:8000/products/', {
         method: 'POST',
+        credentials: 'include',
         headers: {
-          Authorization: 'Bearer <token>',
+          Authorization: `Bearer ${localStorage.getItem('token') || ''}`,
         },
         body: formData,
       });

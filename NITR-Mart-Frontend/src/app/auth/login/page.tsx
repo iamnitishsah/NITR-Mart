@@ -1,5 +1,5 @@
 "use client";
-import { ArrowRight, Eye, EyeOff, Lock, Mail, Zap } from "lucide-react";
+import { ArrowRight, Eye, EyeOff, Lock, Mail, User, Zap } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -25,9 +25,39 @@ const Login = () => {
         body: JSON.stringify({ email, password }),
       });
 
-      if (response.ok) {
-        router.push("/pages/dashboard");
-      } else {
+        if (response.ok) {
+          const data = await response.json();
+          localStorage.setItem("token", data.access);
+          localStorage.setItem('refreshToken', data.refresh);
+          console.log("Token stored in localStorage:", data.access);
+          console.log("Login successful:", data);
+
+          // Fetch current user details and log them
+          try {
+            const userResponse = await fetch("http://localhost:8000/users/me/", {
+              method: "GET",
+              headers: {
+                Authorization: `Bearer ${data.access}`,
+              },
+            });
+            if (userResponse.ok) {
+              const user = await userResponse.json();
+              router.push("/pages/dashboard");
+              console.log("User details:", {
+                email: user.email,
+                firstName: user.first_name,
+                lastName: user.last_name,
+                rollNo: user.roll_no,
+                branch: user.branch,
+              });
+            } else {
+              console.error("Failed to fetch user details");
+            }
+          } catch (error) {
+            console.error("Error fetching user details:", error);
+          }
+         
+        } else {
         const data = await response.json();
         setError(data.error || "Invalid email or password");
       }
