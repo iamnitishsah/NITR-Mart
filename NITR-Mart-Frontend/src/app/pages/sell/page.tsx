@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Upload, BookOpen, Laptop, ShoppingCart, Camera, Tag, Users, Coffee, Gamepad2 } from 'lucide-react';
 import { FaRupeeSign } from "react-icons/fa";
@@ -23,6 +23,7 @@ const Sell = () => {
     category: '',
     is_sold: false,
   });
+   const [stars, setStars] = useState<{ id: number; x: number; y: number; size: number; opacity: number; animationDelay: number }[]>([]);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [dragActive, setDragActive] = useState(false);
@@ -133,18 +134,21 @@ const Sell = () => {
     { value: 'furniture', label: 'Furniture', icon: Coffee, color: 'from-green-500 to-green-600' },
     { value: 'gaming', label: 'Gaming & Entertainment', icon: Gamepad2, color: 'from-red-500 to-red-600' },
   ];
-  const generateStars = (count: number) => {
-    return Array.from({ length: count }, (_, i) => ({
-      id: i,
-      x: Math.random() * 100,
-      y: Math.random() * 100,
-      size: Math.random() * 1.5 + 0.5,
-      opacity: Math.random() * 0.8 + 0.2,
-      animationDelay: Math.random() * 2
-    }));
-  };
+  // Generate random stars
+  useEffect(() => {
+    const generateStars = (count: number) => {
+      return Array.from({ length: count }, (_, i) => ({
+        id: i,
+        x: Math.random() * 100,
+        y: Math.random() * 100,
+        size: Math.random() * 1.5 + 0.5,
+        opacity: Math.random() * 0.8 + 0.2,
+        animationDelay: Math.random() * 2,
+      }));
+    };
 
-  const stars = generateStars(150);
+    setStars(generateStars(150)); // Generate stars only on the client side
+  }, []);
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black relative">
          <div className="fixed inset-0 pointer-events-none z-0">

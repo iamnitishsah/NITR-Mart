@@ -24,6 +24,7 @@ interface User {
 }
 
 const Dashboard = () => {
+   const [stars, setStars] = useState<{ id: number; x: number; y: number; size: number; opacity: number; animationDelay: number }[]>([]);
   const [user, setUser] = useState<User | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -63,37 +64,27 @@ const Dashboard = () => {
 
     fetchUser();
   }, []);
-
-  const handleLogout = async () => {
-    const refreshToken = localStorage.getItem("refreshToken");
-    if (!refreshToken) {return};
-
-    try {
-      const res = await fetch("http://localhost:8000/users/logout/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ refresh: refreshToken }),
-      });
-
-      if (res.ok) {
-        localStorage.removeItem("token");
-        localStorage.removeItem("refreshToken");
-        setUser(null);
-      }
-    } catch (err) {
-      console.error("Logout failed", err);
-    }
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("refreshToken");
+    setUser(null);
+    router.push("/pages/welcome");
   };
+  // Generate random stars
+  useEffect(() => {
+    const generateStars = (count: number) => {
+      return Array.from({ length: count }, (_, i) => ({
+        id: i,
+        x: Math.random() * 100,
+        y: Math.random() * 100,
+        size: Math.random() * 1.5 + 0.5,
+        opacity: Math.random() * 0.8 + 0.2,
+        animationDelay: Math.random() * 2,
+      }));
+    };
 
-  const stars = Array.from({ length: 150 }, (_, i) => ({
-    id: i,
-    x: Math.random() * 100,
-    y: Math.random() * 100,
-    size: Math.random() * 1.5 + 0.5,
-    opacity: Math.random() * 0.8 + 0.2,
-    animationDelay: Math.random() * 2,
-  }));
-
+    setStars(generateStars(150)); // Generate stars only on the client side
+  }, []);
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black relative">
       <div className="fixed inset-0 pointer-events-none z-0">

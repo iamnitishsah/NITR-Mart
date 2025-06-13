@@ -14,7 +14,7 @@ import {
   Users,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 
 const Signup = () => {
   const router = useRouter();
@@ -31,7 +31,7 @@ const Signup = () => {
     department: "",
     roll_no: "",
   });
-
+ const [stars, setStars] = useState<{ id: number; x: number; y: number; size: number; opacity: number; animationDelay: number }[]>([]);
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -74,18 +74,21 @@ const Signup = () => {
       setIsLoading(false);
     }
   };
-  const generateStars = (count: number) => {
-    return Array.from({ length: count }, (_, i) => ({
-      id: i,
-      x: Math.random() * 100,
-      y: Math.random() * 100,
-      size: Math.random() * 1.5 + 0.5,
-      opacity: Math.random() * 0.8 + 0.2,
-      animationDelay: Math.random() * 2,
-    }));
-  };
+  // Generate random stars
+  useEffect(() => {
+    const generateStars = (count: number) => {
+      return Array.from({ length: count }, (_, i) => ({
+        id: i,
+        x: Math.random() * 100,
+        y: Math.random() * 100,
+        size: Math.random() * 1.5 + 0.5,
+        opacity: Math.random() * 0.8 + 0.2,
+        animationDelay: Math.random() * 2,
+      }));
+    };
 
-  const stars = generateStars(150);
+    setStars(generateStars(150)); // Generate stars only on the client side
+  }, []);
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black flex items-center justify-center p-4 relative overflow-hidden">
       <div className="fixed inset-0 pointer-events-none z-0">
