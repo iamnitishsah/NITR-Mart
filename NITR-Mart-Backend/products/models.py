@@ -6,13 +6,10 @@ CATEGORIES = [
     ('Books & Study Materials', 'Books & Study Materials'),
     ('Hostel Essentials', 'Hostel Essentials'),
     ('Furniture', 'Furniture'),
-    ('Clothing & Accessories', 'Clothing & Accessories'),
     ('Sports & Fitness', 'Sports & Fitness'),
     ('Cycle & Transport', 'Cycle & Transport'),
     ('Room Decor', 'Room Decor'),
-    ('Stationery', 'Stationery'),
     ('Lab Equipment', 'Lab Equipment'),
-    ('Event Costumes', 'Event Costumes'),
     ('Others', 'Others')
 ]
 
@@ -32,14 +29,3 @@ class Product(models.Model):
 
     def __str__(self):
         return self.title
-
-
-# class ProductImage(models.Model):
-#     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images')
-#     image = models.ImageField(upload_to='products/images/')
-#
-#     def __str__(self):
-#         return f"Image for {self.product.title}"
-#
-#     class Meta:
-#         verbose_name_plural = 'Product Images'
