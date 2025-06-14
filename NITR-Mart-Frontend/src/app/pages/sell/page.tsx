@@ -1,7 +1,22 @@
-'use client';
-import React, { useState,useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { Upload, BookOpen, Laptop, ShoppingCart, Camera, Tag, Users, Coffee, Gamepad2 } from 'lucide-react';
+"use client";
+import {
+  BookOpen,
+  Camera,
+  Coffee,
+  Gamepad2,
+  Laptop,
+  ShoppingCart,
+  Tag,
+  Upload,
+  Users,
+  Dumbbell,
+  Bike,
+  Home,
+  FlaskConical,
+  MoreHorizontal,
+} from "lucide-react";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
 import { FaRupeeSign } from "react-icons/fa";
 
 const Sell = () => {
@@ -15,38 +30,49 @@ const Sell = () => {
     category: string;
     is_sold: boolean;
   }>({
-    title: '',
-    description: '',
-    price: '',
+    title: "",
+    description: "",
+    price: "",
     negotiable: false,
     image: null,
-    category: '',
+    category: "",
     is_sold: false,
   });
-   const [stars, setStars] = useState<{ id: number; x: number; y: number; size: number; opacity: number; animationDelay: number }[]>([]);
+  const [stars, setStars] = useState<
+    {
+      id: number;
+      x: number;
+      y: number;
+      size: number;
+      opacity: number;
+      animationDelay: number;
+    }[]
+  >([]);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [dragActive, setDragActive] = useState(false);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value, type } = e.target as HTMLInputElement;
     const checked = (e.target as HTMLInputElement).checked ?? false;
     setNewProduct((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value,
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const {files} = e.target;
+    const { files } = e.target;
     if (files && files.length > 0) {
       const file = files[0];
       setNewProduct((prev) => ({
         ...prev,
         image: file,
       }));
-      
+
       const reader = new FileReader();
       reader.onload = () => {
         if (reader.result) {
@@ -57,7 +83,11 @@ const Sell = () => {
     }
   };
 
-  const handleDrag = (e: { preventDefault: () => void; stopPropagation: () => void; type: string; }) => {
+  const handleDrag = (e: {
+    preventDefault: () => void;
+    stopPropagation: () => void;
+    type: string;
+  }) => {
     e.preventDefault();
     e.stopPropagation();
     if (e.type === "dragenter" || e.type === "dragover") {
@@ -68,22 +98,25 @@ const Sell = () => {
   };
 
   const handleDrop = (e: {
-    dataTransfer: any; preventDefault: () => void; stopPropagation: () => void; type: string; 
+    dataTransfer: any;
+    preventDefault: () => void;
+    stopPropagation: () => void;
+    type: string;
   }) => {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
-    
+
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       const file = e.dataTransfer.files[0];
       setNewProduct((prev) => ({
         ...prev,
         image: file,
       }));
-      
+
       const reader = new FileReader();
       reader.onload = (e) => {
-        if (e.target && typeof e.target.result === 'string') {
+        if (e.target && typeof e.target.result === "string") {
           setImagePreview(e.target.result);
         }
       };
@@ -93,47 +126,99 @@ const Sell = () => {
 
   const handleAddProduct = async () => {
     setIsSubmitting(true);
-    
+
     const formData = new FormData();
-    formData.append('title', newProduct.title);
-    formData.append('description', newProduct.description);
-    formData.append('price', newProduct.price);
-    formData.append('negotiable', String(newProduct.negotiable));
-    formData.append('category_id', newProduct.category);
+    formData.append("title", newProduct.title);
+    formData.append("description", newProduct.description);
+    formData.append("price", newProduct.price);
+    formData.append("negotiable", String(newProduct.negotiable));
+    formData.append("category", newProduct.category);
     if (newProduct.image) {
-      formData.append('image', newProduct.image);
+      formData.append("image", newProduct.image);
     }
 
     try {
-      const response = await fetch('http://127.0.0.1:8000/products/', {
-        method: 'POST',
-        credentials: 'include',
+      const token = localStorage.getItem("token");
+      const response = await fetch("http://127.0.0.1:8000/products/", {
+        method: "POST",
+        credentials: "include",
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('token') || ''}`,
+          Authorization: `Bearer ${token}`,
         },
         body: formData,
       });
-      
+
       if (response.ok) {
         setTimeout(() => {
-          router.push('/dashboard');
+          router.push("/pages/dashboard");
         }, 1000);
       } else {
-        console.error('Error adding product:', await response.json());
+        console.error("Error adding product:", await response.json());
         setIsSubmitting(false);
       }
     } catch (error) {
-      console.error('Error adding product:', error);
+      console.error("Error adding product:", error);
       setIsSubmitting(false);
     }
   };
 
   const categories = [
-    { value: 'textbooks', label: 'Books & Notes', icon: BookOpen, color: 'from-blue-500 to-blue-600' },
-    { value: 'electronics', label: 'Electronics & Tech', icon: Laptop, color: 'from-purple-500 to-purple-600' },
-    { value: 'furniture', label: 'Furniture', icon: Coffee, color: 'from-green-500 to-green-600' },
-    { value: 'gaming', label: 'Gaming & Entertainment', icon: Gamepad2, color: 'from-red-500 to-red-600' },
+    {
+      value: "Electronics",
+      label: "Electronics",
+      icon: Laptop,
+      color: "from-purple-500 to-purple-600",
+    },
+    {
+      value: "Books & Study Materials",
+      label: "Books & Study Materials",
+      icon: BookOpen,
+      color: "from-blue-500 to-blue-600",
+    },
+    {
+      value: "Hostel Essentials",
+      label: "Hostel Essentials",
+      icon: Coffee,
+      color: "from-green-500 to-green-600",
+    },
+    {
+      value: "Furniture",
+      label: "Furniture",
+      icon: Home,
+      color: "from-amber-500 to-amber-600",
+    },
+    {
+      value: "Sports & Fitness",
+      label: "Sports & Fitness",
+      icon: Dumbbell,
+      color: "from-red-500 to-red-600",
+    },
+    {
+      value: "Cycle & Transport",
+      label: "Cycle & Transport",
+      icon: Bike,
+      color: "from-cyan-500 to-cyan-600",
+    },
+    {
+      value: "Room Decor",
+      label: "Room Decor",
+      icon: Tag,
+      color: "from-pink-500 to-pink-600",
+    },
+    {
+      value: "Lab Equipment",
+      label: "Lab Equipment",
+      icon: FlaskConical,
+      color: "from-indigo-500 to-indigo-600",
+    },
+    {
+      value: "Others",
+      label: "Others",
+      icon: MoreHorizontal,
+      color: "from-gray-500 to-gray-600",
+    },
   ];
+
   // Generate random stars
   useEffect(() => {
     const generateStars = (count: number) => {
@@ -151,7 +236,7 @@ const Sell = () => {
   }, []);
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black relative">
-         <div className="fixed inset-0 pointer-events-none z-0">
+      <div className="fixed inset-0 pointer-events-none z-0">
         {stars.map((star) => (
           <div
             key={star.id}
@@ -163,29 +248,40 @@ const Sell = () => {
               height: `${star.size}px`,
               opacity: star.opacity,
               animationDelay: `${star.animationDelay}s`,
-             
             }}
           />
         ))}
       </div>
       {/* Subtle Background Pattern */}
       <div className="absolute inset-0 opacity-5">
-        <div className="absolute inset-0" style={{
-          backgroundImage: `radial-gradient(circle at 25px 25px, rgba(255,255,255,0.1) 2px, transparent 0)`,
-          backgroundSize: '50px 50px'
-        }}></div>
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `radial-gradient(circle at 25px 25px, rgba(255,255,255,0.1) 2px, transparent 0)`,
+            backgroundSize: "50px 50px",
+          }}
+        ></div>
       </div>
 
       {/* Floating Accent Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 left-10 w-32 h-32 bg-cyan-500/10 rounded-full blur-xl animate-pulse"></div>
-        <div className="absolute top-60 right-20 w-24 h-24 bg-emerald-500/10 rounded-full blur-xl animate-pulse" style={{animationDelay: '1s'}}></div>
-        <div className="absolute bottom-32 left-1/4 w-20 h-20 bg-green-500/10 rounded-full blur-xl animate-pulse" style={{animationDelay: '2s'}}></div>
-        <div className="absolute bottom-20 right-1/3 w-28 h-28 bg-pink-500/10 rounded-full blur-xl animate-pulse" style={{animationDelay: '3s'}}></div>
+        <div
+          className="absolute top-60 right-20 w-24 h-24 bg-emerald-500/10 rounded-full blur-xl animate-pulse"
+          style={{ animationDelay: "1s" }}
+        ></div>
+        <div
+          className="absolute bottom-32 left-1/4 w-20 h-20 bg-green-500/10 rounded-full blur-xl animate-pulse"
+          style={{ animationDelay: "2s" }}
+        ></div>
+        <div
+          className="absolute bottom-20 right-1/3 w-28 h-28 bg-pink-500/10 rounded-full blur-xl animate-pulse"
+          style={{ animationDelay: "3s" }}
+        ></div>
       </div>
 
       <div className="relative z-10 container mx-auto px-4 py-8">
-        <div className="max-w-3xl mx-auto">
+        <div className="max-w-5xl mx-auto">
           {/* Header */}
           <div className="text-center mb-12">
             <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-b from-cyan-400 to-emerald-600 rounded-2xl mb-6 shadow-2xl">
@@ -194,10 +290,10 @@ const Sell = () => {
             <h1 className="text-5xl font-black bg-gradient-to-r from-white via-gray-100 to-gray-300 bg-clip-text text-transparent mb-3">
               NITR Mart
             </h1>
-            <p className="text-gray-400 text-xl font-medium">Sell your stuff to fellow students</p>
-            <div className="mt-4 flex items-center justify-center space-x-2 text-sm text-gray-500">
-              
-            </div>
+            <p className="text-gray-400 text-xl font-medium">
+              Sell your stuff to fellow students
+            </p>
+            <div className="mt-4 flex items-center justify-center space-x-2 text-sm text-gray-500"></div>
           </div>
 
           {/* Main Container */}
@@ -207,7 +303,9 @@ const Sell = () => {
                 <ShoppingCart className="w-6 h-6 mr-3 text-cyan-400" />
                 List Your Item
               </h2>
-              <p className="text-gray-400 mt-1">Fill out the details to list your item on the marketplace</p>
+              <p className="text-gray-400 mt-1">
+                Fill out the details to list your item on the marketplace
+              </p>
             </div>
 
             <div className="p-8 space-y-8">
@@ -253,7 +351,9 @@ const Sell = () => {
                     Price
                   </label>
                   <div className="relative">
-                    <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg font-semibold">₹</span>
+                    <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg font-semibold">
+                      ₹
+                    </span>
                     <input
                       type="number"
                       name="price"
@@ -265,7 +365,7 @@ const Sell = () => {
                     />
                   </div>
                 </div>
-                
+
                 <div className="flex items-end">
                   <label className="flex items-center space-x-3 bg-gray-800 px-6 py-4 rounded-xl border-2 border-gray-600 hover:border-gray-500 transition-all duration-300 cursor-pointer w-full">
                     <input
@@ -282,7 +382,9 @@ const Sell = () => {
 
               {/* Category */}
               <div className="space-y-4">
-                <label className="block text-white font-semibold text-lg">Choose Category</label>
+                <label className="block text-white font-semibold text-lg">
+                  Choose Category
+                </label>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {categories.map((cat) => {
                     const IconComponent = cat.icon;
@@ -291,8 +393,8 @@ const Sell = () => {
                         key={cat.value}
                         className={`relative flex items-center p-4 rounded-xl border-2 cursor-pointer transition-all duration-300 group ${
                           newProduct.category === cat.value
-                            ? 'border-sky-600 bg-blue-500/20 shadow-lg shadow-blue-500/25 transform scale-105'
-                            : 'border-gray-600 bg-gray-800 hover:border-gray-500 hover:bg-gray-700'
+                            ? "border-sky-600 bg-blue-500/20 shadow-lg shadow-blue-500/25 transform scale-105"
+                            : "border-gray-600 bg-gray-800 hover:border-gray-500 hover:bg-gray-700"
                         }`}
                       >
                         <input
@@ -303,11 +405,15 @@ const Sell = () => {
                           onChange={handleInputChange}
                           className="sr-only"
                         />
-                        <div className={`flex items-center justify-center w-12 h-12 rounded-lg bg-gradient-to-r ${cat.color} mr-4 flex-shrink-0`}>
+                        <div
+                          className={`flex items-center justify-center w-12 h-12 rounded-lg bg-gradient-to-r ${cat.color} mr-4 flex-shrink-0`}
+                        >
                           <IconComponent className="w-6 h-6 text-white" />
                         </div>
                         <div>
-                          <span className="text-white font-semibold block">{cat.label}</span>
+                          <span className="text-white font-semibold block">
+                            {cat.label}
+                          </span>
                         </div>
                       </label>
                     );
@@ -324,8 +430,8 @@ const Sell = () => {
                 <div
                   className={`relative border-2 border-dashed rounded-xl p-8 transition-all duration-300 ${
                     dragActive
-                      ? 'border-cyan-500 bg-cyan-500/10'
-                      : 'border-gray-600 bg-gray-800 hover:border-gray-500 hover:bg-gray-700'
+                      ? "border-cyan-500 bg-cyan-500/10"
+                      : "border-gray-600 bg-gray-800 hover:border-gray-500 hover:bg-gray-700"
                   }`}
                   onDragEnter={handleDrag}
                   onDragLeave={handleDrag}
@@ -340,7 +446,7 @@ const Sell = () => {
                     accept="image/*"
                     required
                   />
-                  
+
                   {imagePreview ? (
                     <div className="text-center">
                       <img
@@ -348,14 +454,22 @@ const Sell = () => {
                         alt="Preview"
                         className="max-w-full max-h-64 mx-auto rounded-lg shadow-lg mb-4"
                       />
-                      <p className="text-gray-400 text-lg">Click or drag to change photo</p>
+                      <p className="text-gray-400 text-lg">
+                        Click or drag to change photo
+                      </p>
                     </div>
                   ) : (
                     <div className="text-center">
                       <Upload className="w-16 h-16 text-gray-500 mx-auto mb-4" />
-                      <p className="text-white font-semibold text-xl mb-2">Upload Product Photo</p>
-                      <p className="text-gray-400 text-lg">Drag & drop or click to browse</p>
-                      <p className="text-gray-500 text-sm mt-2">PNG, JPG, GIF up to 10MB</p>
+                      <p className="text-white font-semibold text-xl mb-2">
+                        Upload Product Photo
+                      </p>
+                      <p className="text-gray-400 text-lg">
+                        Drag & drop or click to browse
+                      </p>
+                      <p className="text-gray-500 text-sm mt-2">
+                        PNG, JPG, GIF up to 10MB
+                      </p>
                     </div>
                   )}
                 </div>
@@ -368,9 +482,9 @@ const Sell = () => {
                   onClick={handleAddProduct}
                   disabled={isSubmitting}
                   className={`w-full py-5 px-8 rounded-xl font-bold text-xl transition-all duration-300 transform ${
-                    isSubmitting 
-                      ? 'bg-gray-600 cursor-not-allowed' 
-                      : 'bg-gradient-to-r from-cyan-500 to-emerald-800 hover:from-cyan-600 hover:to-emerald-700 hover:scale-[1.02] hover:shadow-2xl active:scale-[0.98] shadow-lg'
+                    isSubmitting
+                      ? "bg-gray-600 cursor-not-allowed"
+                      : "bg-gradient-to-r from-cyan-500 to-emerald-800 hover:from-cyan-600 hover:to-emerald-700 hover:scale-[1.02] hover:shadow-2xl active:scale-[0.98] shadow-lg"
                   } text-white`}
                 >
                   {isSubmitting ? (
