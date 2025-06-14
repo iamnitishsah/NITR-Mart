@@ -1,20 +1,20 @@
 "use client";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { 
-  Mail, 
-  Lock, 
-  Eye, 
-  EyeOff, 
-  User, 
-  Users, 
-  GraduationCap, 
-  Building, 
-  Calendar, 
-  Hash,
+import {
   ArrowRight,
-  UserPlus
+  Building,
+  Calendar,
+  Eye,
+  EyeOff,
+  GraduationCap,
+  Hash,
+  Lock,
+  Mail,
+  User,
+  UserPlus,
+  Users,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState,useEffect } from "react";
 
 const Signup = () => {
   const router = useRouter();
@@ -29,15 +29,19 @@ const Signup = () => {
     year: "",
     branch: "",
     department: "",
-    roll_number: "",
+    roll_no: "",
   });
-
+ const [stars, setStars] = useState<{ id: number; x: number; y: number; size: number; opacity: number; animationDelay: number }[]>([]);
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
+  ) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
@@ -50,7 +54,7 @@ const Signup = () => {
     setError("");
 
     try {
-      const response = await fetch("http://localhost:8000/users/register/", {
+      const response = await fetch("http://localhost:8000/users/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -70,21 +74,24 @@ const Signup = () => {
       setIsLoading(false);
     }
   };
-  const generateStars = (count: number) => {
-    return Array.from({ length: count }, (_, i) => ({
-      id: i,
-      x: Math.random() * 100,
-      y: Math.random() * 100,
-      size: Math.random() * 1.5 + 0.5,
-      opacity: Math.random() * 0.8 + 0.2,
-      animationDelay: Math.random() * 2
-    }));
-  };
+  // Generate random stars
+  useEffect(() => {
+    const generateStars = (count: number) => {
+      return Array.from({ length: count }, (_, i) => ({
+        id: i,
+        x: Math.random() * 100,
+        y: Math.random() * 100,
+        size: Math.random() * 1.5 + 0.5,
+        opacity: Math.random() * 0.8 + 0.2,
+        animationDelay: Math.random() * 2,
+      }));
+    };
 
-  const stars = generateStars(150);
+    setStars(generateStars(150)); // Generate stars only on the client side
+  }, []);
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black flex items-center justify-center p-4 relative overflow-hidden">
-        <div className="fixed inset-0 pointer-events-none z-0">
+      <div className="fixed inset-0 pointer-events-none z-0">
         {stars.map((star) => (
           <div
             key={star.id}
@@ -96,31 +103,41 @@ const Signup = () => {
               height: `${star.size}px`,
               opacity: star.opacity,
               animationDelay: `${star.animationDelay}s`,
-              
             }}
           />
         ))}
       </div>
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-5">
-        <div className="absolute inset-0" style={{
-          backgroundImage: `radial-gradient(circle at 25px 25px, rgba(255,255,255,0.1) 2px, transparent 0)`,
-          backgroundSize: '50px 50px'
-        }}></div>
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `radial-gradient(circle at 25px 25px, rgba(255,255,255,0.1) 2px, transparent 0)`,
+            backgroundSize: "50px 50px",
+          }}
+        ></div>
       </div>
 
       {/* Floating Accent Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-cyan-500/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute top-1/3 right-1/4 w-24 h-24 bg-emerald-500/10 rounded-full blur-2xl animate-pulse" style={{animationDelay: '1s'}}></div>
-        <div className="absolute bottom-1/4 left-1/3 w-40 h-40 bg-purple-500/10 rounded-full blur-3xl animate-pulse" style={{animationDelay: '2s'}}></div>
-        <div className="absolute top-1/2 right-1/3 w-28 h-28 bg-orange-500/10 rounded-full blur-2xl animate-pulse" style={{animationDelay: '3s'}}></div>
+        <div
+          className="absolute top-1/3 right-1/4 w-24 h-24 bg-emerald-500/10 rounded-full blur-2xl animate-pulse"
+          style={{ animationDelay: "1s" }}
+        ></div>
+        <div
+          className="absolute bottom-1/4 left-1/3 w-40 h-40 bg-purple-500/10 rounded-full blur-3xl animate-pulse"
+          style={{ animationDelay: "2s" }}
+        ></div>
+        <div
+          className="absolute top-1/2 right-1/3 w-28 h-28 bg-orange-500/10 rounded-full blur-2xl animate-pulse"
+          style={{ animationDelay: "3s" }}
+        ></div>
       </div>
 
       {/* Signup Card */}
       <div className="relative z-10 w-full max-w-4xl">
         <div className="bg-gray-900/40 backdrop-blur-xl border border-gray-700/50 rounded-2xl shadow-2xl p-8">
-          
           {/* Header */}
           <div className="text-center mb-8">
             <h2 className="font-serif text-3xl font-black bg-gradient-to-r from-white via-gray-100 to-gray-300 bg-clip-text text-transparent mb-2">
@@ -130,13 +147,14 @@ const Signup = () => {
 
           {/* Form */}
           <form className="space-y-6" onSubmit={handleSubmit}>
-            
             {/* Personal Information */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              
               {/* First Name */}
               <div className="space-y-2">
-                <label htmlFor="first_name" className="text-sm font-medium text-gray-300 flex items-center">
+                <label
+                  htmlFor="first_name"
+                  className="text-sm font-medium text-gray-300 flex items-center"
+                >
                   <User className="w-4 h-4 mr-2 text-emerald-400" />
                   First Name
                 </label>
@@ -154,7 +172,10 @@ const Signup = () => {
 
               {/* Last Name */}
               <div className="space-y-2">
-                <label htmlFor="last_name" className="text-sm font-medium text-gray-300 flex items-center">
+                <label
+                  htmlFor="last_name"
+                  className="text-sm font-medium text-gray-300 flex items-center"
+                >
                   <User className="w-4 h-4 mr-2 text-emerald-400" />
                   Last Name
                 </label>
@@ -172,7 +193,10 @@ const Signup = () => {
 
               {/* Email */}
               <div className="space-y-2">
-                <label htmlFor="email" className="text-sm font-medium text-gray-300 flex items-center">
+                <label
+                  htmlFor="email"
+                  className="text-sm font-medium text-gray-300 flex items-center"
+                >
                   <Mail className="w-4 h-4 mr-2 text-purple-400" />
                   Email (@nitrkl.ac.in)
                 </label>
@@ -190,7 +214,10 @@ const Signup = () => {
 
               {/* Role */}
               <div className="space-y-2">
-                <label htmlFor="role" className="text-sm font-medium text-gray-300 flex items-center">
+                <label
+                  htmlFor="role"
+                  className="text-sm font-medium text-gray-300 flex items-center"
+                >
                   <Users className="w-4 h-4 mr-2 text-orange-400" />
                   Role
                 </label>
@@ -209,7 +236,10 @@ const Signup = () => {
 
               {/* Password */}
               <div className="space-y-2">
-                <label htmlFor="password" className="text-sm font-medium text-gray-300 flex items-center">
+                <label
+                  htmlFor="password"
+                  className="text-sm font-medium text-gray-300 flex items-center"
+                >
                   <Lock className="w-4 h-4 mr-2 text-pink-400" />
                   Password
                 </label>
@@ -229,14 +259,21 @@ const Signup = () => {
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-200 transition-colors"
                   >
-                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                    {showPassword ? (
+                      <EyeOff className="w-5 h-5" />
+                    ) : (
+                      <Eye className="w-5 h-5" />
+                    )}
                   </button>
                 </div>
               </div>
 
               {/* Confirm Password */}
               <div className="space-y-2">
-                <label htmlFor="password_confirm" className="text-sm font-medium text-gray-300 flex items-center">
+                <label
+                  htmlFor="password_confirm"
+                  className="text-sm font-medium text-gray-300 flex items-center"
+                >
                   <Lock className="w-4 h-4 mr-2 text-red-400" />
                   Confirm Password
                 </label>
@@ -256,18 +293,24 @@ const Signup = () => {
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                     className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-200 transition-colors"
                   >
-                    {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                    {showConfirmPassword ? (
+                      <EyeOff className="w-5 h-5" />
+                    ) : (
+                      <Eye className="w-5 h-5" />
+                    )}
                   </button>
                 </div>
               </div>
-
             </div>
 
             {/* Role-specific Fields */}
             {formData.role === "student" && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <label htmlFor="year" className="text-sm font-medium text-gray-300 flex items-center">
+                  <label
+                    htmlFor="year"
+                    className="text-sm font-medium text-gray-300 flex items-center"
+                  >
                     <Calendar className="w-4 h-4 mr-2 text-cyan-400" />
                     Year
                   </label>
@@ -283,7 +326,10 @@ const Signup = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <label htmlFor="branch" className="text-sm font-medium text-gray-300 flex items-center">
+                  <label
+                    htmlFor="branch"
+                    className="text-sm font-medium text-gray-300 flex items-center"
+                  >
                     <GraduationCap className="w-4 h-4 mr-2 text-green-400" />
                     Branch
                   </label>
@@ -303,7 +349,10 @@ const Signup = () => {
 
             {(formData.role === "faculty" || formData.role === "staff") && (
               <div className="space-y-2">
-                <label htmlFor="department" className="text-sm font-medium text-gray-300 flex items-center">
+                <label
+                  htmlFor="department"
+                  className="text-sm font-medium text-gray-300 flex items-center"
+                >
                   <Building className="w-4 h-4 mr-2 text-indigo-400" />
                   Department
                 </label>
@@ -322,15 +371,18 @@ const Signup = () => {
 
             {/* Roll Number */}
             <div className="space-y-2">
-              <label htmlFor="roll_number" className="text-sm font-medium text-gray-300 flex items-center">
+              <label
+                htmlFor="roll_no"
+                className="text-sm font-medium text-gray-300 flex items-center"
+              >
                 <Hash className="w-4 h-4 mr-2 text-yellow-400" />
                 Roll Number
               </label>
               <input
                 type="text"
-                id="roll_number"
-                name="roll_number"
-                value={formData.roll_number}
+                id="roll_no"
+                name="roll_no"
+                value={formData.roll_no}
                 onChange={handleChange}
                 className="w-full px-4 py-3 bg-gray-800/50 border-2 border-gray-600 rounded-xl text-white placeholder-gray-400 focus:border-yellow-500 focus:outline-none focus:ring-4 focus:ring-yellow-500/20 transition-all duration-300 backdrop-blur-sm"
                 placeholder="Enter your roll number"
@@ -367,7 +419,9 @@ const Signup = () => {
               <div className="w-full border-t border-gray-700"></div>
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-gray-900/40 px-2 text-yellow-400">Already have an account?</span>
+              <span className="bg-gray-900/40 px-2 text-yellow-400">
+                Already have an account?
+              </span>
             </div>
           </div>
 
@@ -379,7 +433,6 @@ const Signup = () => {
             Sign In
             <ArrowRight className="w-4 h-4 ml-2 text-cyan-400 group-hover:text-cyan-300 transition-colors" />
           </button>
-          
         </div>
 
         {/* Additional Info */}

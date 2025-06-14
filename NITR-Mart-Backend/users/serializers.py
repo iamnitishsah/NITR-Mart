@@ -8,9 +8,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = [
-            'id', 'email', 'first_name', 'last_name', 'phone_number',
-            'year', 'branch', 'roll_no', 'profile_picture', 'bio',
-            'is_verified', 'created_at', 'updated_at', 'is_staff', 'is_superuser'
+            'id', 'email', 'first_name', 'last_name','year', 'branch', 'roll_no','is_verified', 'created_at', 'updated_at', 'is_staff', 'is_superuser'
         ]
         read_only_fields = ['id', 'created_at', 'updated_at', 'is_verified', 'is_staff', 'is_superuser']
 
@@ -25,8 +23,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = [
-            'email', 'password', 'first_name', 'last_name', 'phone_number',
-            'year', 'branch', 'roll_no', 'profile_picture', 'bio'
+            'email', 'password', 'first_name', 'last_name','year', 'branch', 'roll_no'
         ]
 
     def validate_email(self, value):
@@ -45,8 +42,7 @@ class UserUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = [
-            'email', 'password', 'current_password', 'first_name', 'last_name',
-            'phone_number', 'year', 'branch', 'roll_no', 'profile_picture', 'bio'
+            'email', 'password', 'current_password', 'first_name', 'last_name', 'year', 'branch', 'roll_no'
         ]
 
     def validate(self, data):

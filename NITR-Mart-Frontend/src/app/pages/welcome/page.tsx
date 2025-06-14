@@ -20,6 +20,7 @@ import {   ShoppingBag,
   Play,
   Mail
 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 interface Product {
     id: string;
@@ -34,6 +35,7 @@ interface Product {
 }
 
 const WelcomePage = () => {
+  const [stars, setStars] = useState<{ id: number; x: number; y: number; size: number; opacity: number; animationDelay: number }[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -149,9 +151,9 @@ const WelcomePage = () => {
   const getProductsByCategory = (categoryKey: string) => {
     return products.filter((product) => product.category === categoryKey).slice(0, 3);
   };
-
+ const router = useRouter();
   const navigation = (path: string) => {
-    console.log(`Navigate to: ${path}`);
+    router.push(path);
   };
 
   const features = [
@@ -191,25 +193,27 @@ const WelcomePage = () => {
   ];
 
   // Generate random stars
-  const generateStars = (count: number) => {
-    return Array.from({ length: count }, (_, i) => ({
-      id: i,
-      x: Math.random() * 100,
-      y: Math.random() * 100,
-      size: Math.random() * 1.5 + 0.5,
-      opacity: Math.random() * 0.8 + 0.2,
-      animationDelay: Math.random() * 2
-    }));
-  };
+  useEffect(() => {
+    const generateStars = (count: number) => {
+      return Array.from({ length: count }, (_, i) => ({
+        id: i,
+        x: Math.random() * 100,
+        y: Math.random() * 100,
+        size: Math.random() * 1.5 + 0.5,
+        opacity: Math.random() * 0.8 + 0.2,
+        animationDelay: Math.random() * 2,
+      }));
+    };
 
-  const stars = generateStars(150);
+    setStars(generateStars(150)); // Generate stars only on the client side
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white overflow-hidden relative">
       
       {/* Animated Stars Background */}
       <div className="fixed inset-0 pointer-events-none z-0">
-        {stars.map((star) => (
+      {stars.map((star) => (
           <div
             key={star.id}
             className="absolute bg-white rounded-full animate-pulse"
@@ -220,7 +224,6 @@ const WelcomePage = () => {
               height: `${star.size}px`,
               opacity: star.opacity,
               animationDelay: `${star.animationDelay}s`,
-              transform: `translateY(${scrollY * 0.1}px)`
             }}
           />
         ))}
