@@ -347,7 +347,7 @@ const Signup = () => {
               </div>
             )}
 
-            {(formData.role === "faculty" || formData.role === "staff") && (
+            {(formData.role === "faculty") && (
               <div className="space-y-2">
                 <label
                   htmlFor="department"

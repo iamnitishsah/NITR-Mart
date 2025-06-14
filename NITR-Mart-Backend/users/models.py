@@ -24,12 +24,17 @@ class CustomUserManager(UserManager):
 class User(AbstractUser):
     username = None
     email = models.EmailField(unique=True)
-    phone_number = models.CharField(max_length=15, blank=True, null=True)
+    role = models.CharField(max_length=20)
+
+    # for student
     year = models.CharField(max_length=10)
     branch = models.CharField(max_length=20)
     roll_no = models.CharField(max_length=15)
-    profile_picture = models.ImageField(upload_to='profile_pictures', blank=True, null=True)
-    bio = models.TextField(blank=True, null=True)
+
+    # for faculty
+    department = models.CharField(max_length=50, blank=True, null=True)
+
+    # for admin
     is_verified = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
