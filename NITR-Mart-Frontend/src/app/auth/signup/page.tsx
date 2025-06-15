@@ -312,37 +312,73 @@ const Signup = () => {
                     className="text-sm font-medium text-gray-300 flex items-center"
                   >
                     <Calendar className="w-4 h-4 mr-2 text-cyan-400" />
-                    Year
+                    Passing Year
                   </label>
-                  <input
-                    type="text"
-                    id="year"
-                    name="year"
-                    required
-                    value={formData.year}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 bg-gray-800/50 border-2 border-gray-600 rounded-xl text-white placeholder-gray-400 focus:border-cyan-500 focus:outline-none focus:ring-4 focus:ring-cyan-500/20 transition-all duration-300 backdrop-blur-sm"
-                    placeholder="e.g., 2nd Year"
-                  />
+                  <select
+                      id="year"
+                      name="year"
+                      required
+                      value={formData.year}
+                      onChange={handleChange}
+                      className="w-full px-4 py-3 bg-gray-800/50 border-2 border-gray-600 rounded-xl text-white placeholder-gray-400 focus:border-cyan-500 focus:outline-none focus:ring-4 focus:ring-cyan-500/20 transition-all duration-300 backdrop-blur-sm"
+                  >
+                    <option value="">Select Year</option>
+                    <option value="2026">2026</option>
+                    <option value="2027">2027</option>
+                    <option value="2028">2028</option>
+                    <option value="2029">2029</option>
+                  </select>
+
                 </div>
                 <div className="space-y-2">
                   <label
-                    htmlFor="branch"
-                    className="text-sm font-medium text-gray-300 flex items-center"
+                      htmlFor="branch"
+                      className="text-sm font-medium text-gray-300 flex items-center"
                   >
                     <GraduationCap className="w-4 h-4 mr-2 text-green-400" />
                     Branch
                   </label>
-                  <input
-                    type="text"
-                    id="branch"
-                    name="branch"
-                    required
-                    value={formData.branch}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 bg-gray-800/50 border-2 border-gray-600 rounded-xl text-white placeholder-gray-400 focus:border-green-500 focus:outline-none focus:ring-4 focus:ring-green-500/20 transition-all duration-300 backdrop-blur-sm"
-                    placeholder="e.g., Computer Science"
-                  />
+
+                  <select
+                      id="branch"
+                      name="branch"
+                      required
+                      value={formData.branch}
+                      onChange={handleChange}
+                      className="w-full px-4 py-3 bg-gray-800/50 border-2 border-gray-600 rounded-xl text-white placeholder-gray-400 focus:border-green-500 focus:outline-none focus:ring-4 focus:ring-green-500/20 transition-all duration-300 backdrop-blur-sm"
+                  >
+                    <option value="">Select Branch</option>
+
+                    {/* Engineering Branches */}
+                    <option value="Biotechnology">Biotechnology</option>
+                    <option value="Biomedical Engineering">Biomedical Engineering</option>
+                    <option value="Ceramic Engineering">Ceramic Engineering</option>
+                    <option value="Chemical Engineering">Chemical Engineering</option>
+                    <option value="Civil Engineering">Civil Engineering</option>
+                    <option value="Computer Science and Engineering">Computer Science and Engineering</option>
+                    <option value="Electrical Engineering">Electrical Engineering</option>
+                    <option value="Electronics and Communication Engineering">Electronics and Communication Engineering</option>
+                    <option value="Electronics and Instrumentation Engineering">Electronics and Instrumentation Engineering</option>
+                    <option value="Food Process Engineering">Food Process Engineering</option>
+                    <option value="Industrial Design">Industrial Design</option>
+                    <option value="Mechanical Engineering">Mechanical Engineering</option>
+                    <option value="Metallurgical and Materials Engineering">Metallurgical and Materials Engineering</option>
+                    <option value="Mining Engineering">Mining Engineering</option>
+                    <option value="Production Engineering">Production Engineering</option>
+
+                    {/* Science and Other Disciplines */}
+                    <option value="Architecture">Architecture</option>
+                    <option value="Physics">Physics</option>
+                    <option value="Chemistry">Chemistry</option>
+                    <option value="Mathematics">Mathematics</option>
+                    <option value="Life Science">Life Science</option>
+                    <option value="Earth and Atmospheric Sciences">Earth and Atmospheric Sciences</option>
+                    <option value="Humanities and Social Sciences">Humanities and Social Sciences</option>
+
+                    {/* Management */}
+                    <option value="Management (MBA)">Management (MBA)</option>
+
+                  </select>
                 </div>
               </div>
             )}
