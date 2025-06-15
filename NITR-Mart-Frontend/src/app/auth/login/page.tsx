@@ -1,5 +1,5 @@
 "use client";
-import { ArrowRight, Eye, EyeOff, Lock, Mail, User, Zap } from "lucide-react";
+import { ArrowRight, Eye, EyeOff, Lock, Mail, Zap } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState,useEffect } from "react";
 
@@ -52,23 +52,23 @@ const Login = () => {
                 branch: user.branch,
               });
             } else {
-              console.error("Failed to fetch user details");
+              setError("Failed to fetch user details");
             }
-          } catch (error) {
-            console.error("Error fetching user details:", error);
+          } catch{
+            setError("An error occurred. Please try again.");
           }
          
         } else {
         const data = await response.json();
         setError(data.error || "Invalid email or password");
       }
-    } catch (err) {
+    } catch{
       setError("An error occurred. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
-  // Generate random stars
+ 
   useEffect(() => {
     const generateStars = (count: number) => {
       return Array.from({ length: count }, (_, i) => ({
