@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import Image from "next/image";
 
 interface User {
   firstName: string;
@@ -59,7 +60,6 @@ const Dashboard = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [loading, setLoading] = useState(false);
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const router = useRouter();
 
   // Updated categories to match backend
@@ -444,7 +444,7 @@ const Dashboard = () => {
                         <div className="relative w-full h-96 overflow-hidden">
                           <div className="absolute inset-0 bg-gradient-to-br from-gray-700 to-gray-800" />
                           {product.image ? (
-                            <img
+                            <Image
                               src={product.image}
                               alt={product.title}
                               className="relative z-10 w-full h-full object-contain group-hover:scale-110 transition-transform duration-700 ease-out"

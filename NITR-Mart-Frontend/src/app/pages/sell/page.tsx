@@ -3,7 +3,6 @@ import {
   BookOpen,
   Camera,
   Coffee,
-  Gamepad2,
   Laptop,
   ShoppingCart,
   Tag,
@@ -18,6 +17,7 @@ import {
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { FaRupeeSign } from "react-icons/fa";
+import Image from "next/image";
 
 const Sell = () => {
   const router = useRouter();
@@ -97,12 +97,7 @@ const Sell = () => {
     }
   };
 
-  const handleDrop = (e: {
-    dataTransfer: any;
-    preventDefault: () => void;
-    stopPropagation: () => void;
-    type: string;
-  }) => {
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
@@ -449,7 +444,7 @@ const Sell = () => {
 
                   {imagePreview ? (
                     <div className="text-center">
-                      <img
+                      <Image
                         src={imagePreview}
                         alt="Preview"
                         className="max-w-full max-h-64 mx-auto rounded-lg shadow-lg mb-4"

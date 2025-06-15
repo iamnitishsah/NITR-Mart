@@ -68,7 +68,7 @@ const Signup = () => {
         const data = await response.json();
         setError(JSON.stringify(data));
       }
-    } catch (err) {
+    } catch {
       setError("An error occurred. Please try again.");
     } finally {
       setIsLoading(false);

@@ -7,7 +7,6 @@ import {   ShoppingBag,
   Heart, 
   Star, 
   ArrowRight, 
-  CheckCircle, 
   BookOpen, 
   Laptop, 
   Home, 
@@ -16,9 +15,7 @@ import {   ShoppingBag,
   MessageCircle,
   Shield,
   Zap,
-  Sparkles,
   Play,
-  Mail
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
@@ -37,8 +34,6 @@ interface Product {
 const WelcomePage = () => {
   const [stars, setStars] = useState<{ id: number; x: number; y: number; size: number; opacity: number; animationDelay: number }[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [scrollY, setScrollY] = useState(0);
   const [isVisible, setIsVisible] = useState<{ [key: string]: boolean }>({});
 
@@ -114,7 +109,7 @@ const WelcomePage = () => {
 
   useEffect(() => {
     setProducts(mockProducts);
-    setLoading(false);
+
 
     const handleScroll = () => {
       setScrollY(window.scrollY);
@@ -300,7 +295,7 @@ const WelcomePage = () => {
                Why Choose NITR Mart?
             </h2>
             <p className={`text-xl text-gray-400 max-w-3xl mx-auto transition-all duration-1000 delay-300 ${isVisible.features ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
-              We're more than just a marketplace - we're a community that believes in sustainable living and student connections.
+              We&apos;re more than just a marketplace - we&apos;re a community that believes in sustainable living and student connections.
             </p>
           </div>
 
@@ -407,6 +402,7 @@ const WelcomePage = () => {
                         className="bg-gray-800 p-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 hover:shadow-cyan-500/20 hover:scale-105"
                       >
                         <img
+                          
                           src={product.image}
                           alt={product.title}
                           className="w-full h-32 object-cover rounded-md mb-2"
