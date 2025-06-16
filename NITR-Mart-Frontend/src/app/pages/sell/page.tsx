@@ -17,7 +17,6 @@ import {
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { FaRupeeSign } from "react-icons/fa";
-import Image from "next/image";
 
 const Sell = () => {
   const router = useRouter();
@@ -130,6 +129,7 @@ const Sell = () => {
     formData.append("category", newProduct.category);
     if (newProduct.image) {
       formData.append("image", newProduct.image);
+      
     }
 
     try {
