@@ -35,7 +35,7 @@ const Login = () => {
 
           // Fetch current user details and log them
           try {
-            const userResponse = await fetch("http://localhost:8000/users/me/", {
+            const userResponse = await fetch("https://nitr-mart.onrender.com/users/me/", {
               method: "GET",
               headers: {
                 Authorization: `Bearer ${data.access}`,
