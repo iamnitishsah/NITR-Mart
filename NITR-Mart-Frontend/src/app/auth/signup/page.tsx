@@ -54,7 +54,7 @@ const Signup = () => {
     setError("");
 
     try {
-      const response = await fetch("http://localhost:8000/users/", {
+      const response = await fetch("https://nitr-mart.onrender.com/users/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

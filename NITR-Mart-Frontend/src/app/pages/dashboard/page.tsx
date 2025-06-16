@@ -134,7 +134,7 @@ const Dashboard = () => {
       }
 
       try {
-        const res = await fetch("http://localhost:8000/users/me/", {
+        const res = await fetch("https://nitr-mart.onrender.com/users/me/", {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (res.ok) {
@@ -159,7 +159,7 @@ const Dashboard = () => {
     setLoading(true);
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:8000/products/", {
+      const res = await fetch("https://nitr-mart.onrender.com/products/", {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (res.ok) {

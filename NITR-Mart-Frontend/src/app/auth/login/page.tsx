@@ -18,7 +18,7 @@ const Login = () => {
     setError("");
 
     try {
-      const response = await fetch("http://localhost:8000/users/token/", {
+      const response = await fetch("https://nitr-mart.onrender.com/users/token/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

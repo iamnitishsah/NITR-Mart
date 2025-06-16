@@ -134,7 +134,7 @@ const Sell = () => {
 
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch("http://127.0.0.1:8000/products/", {
+      const response = await fetch("https://nitr-mart.onrender.com/products/", {
         method: "POST",
         credentials: "include",
         headers: {
