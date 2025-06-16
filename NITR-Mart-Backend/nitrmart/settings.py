@@ -1,6 +1,9 @@
 import os
 from pathlib import Path
 from datetime import timedelta
+import cloudinary
+import cloudinary.uploader
+from cloudinary.utils import cloudinary_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -18,6 +21,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'corsheaders',
+    'cloudinary',
+    'cloudinary_storage',
     'rest_framework',
     'rest_framework_simplejwt',
     'users',     # Custom app for user management
@@ -86,7 +91,6 @@ DATABASES = {
     }
 }
 
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -112,18 +116,28 @@ EMAIL_HOST_USER = 'iamnitishsah12@gmail.com'
 EMAIL_HOST_PASSWORD = 'zcgq wuwu mmaz sxcr'
 
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'Asia/Kolkata'
-
 USE_I18N = True
-
 USE_TZ = True
 
 STATIC_URL = 'static/'
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'dq8nbgclv',
+    'API_KEY': '133218337658372',
+    'API_SECRET': 'Mvkp8lLtWVCNKS-T559r5YRDF88',
+}
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+cloudinary.config(
+    cloud_name='dq8nbgclv',
+    api_key='133218337658372',
+    api_secret='Mvkp8lLtWVCNKS-T559r5YRDF88',
+    secure=True
+)
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+# Optional: Add these if you need media file handling
+# MEDIA_URL = '/media/'
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

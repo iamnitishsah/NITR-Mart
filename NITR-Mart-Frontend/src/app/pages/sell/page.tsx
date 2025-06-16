@@ -444,10 +444,10 @@ const Sell = () => {
 
                   {imagePreview ? (
                     <div className="text-center">
-                      <Image
-                        src={imagePreview}
-                        alt="Preview"
-                        className="max-w-full max-h-64 mx-auto rounded-lg shadow-lg mb-4"
+                      <img
+                          src={imagePreview!}
+                          alt="Preview"
+                          className="max-w-full max-h-64 mx-auto rounded-lg shadow-lg mb-4"
                       />
                       <p className="text-gray-400 text-lg">
                         Click or drag to change photo

@@ -447,6 +447,8 @@ const Dashboard = () => {
                             <Image
                               src={product.image}
                               alt={product.title}
+                              unoptimized
+                              fill
                               className="relative z-10 w-full h-full object-contain group-hover:scale-110 transition-transform duration-700 ease-out"
                             />
                           ) : (
