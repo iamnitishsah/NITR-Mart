@@ -30,6 +30,12 @@ interface User {
   branch?: string;
 }
 
+interface Seller {
+  name: string;
+  roll_number: string;
+  email: string;
+}
+
 interface Product {
   id: number;
   title: string;
@@ -38,7 +44,7 @@ interface Product {
   negotiable: boolean;
   image?: string;
   category: string;
-  seller: string;
+  seller: Seller;
   is_sold: boolean;
   posted_at: string;
 }
