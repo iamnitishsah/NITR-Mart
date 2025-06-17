@@ -38,8 +38,6 @@ const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [otpSent, setOtpSent] = useState(false);
-  const [otpVerified, setOtpVerified] = useState(false);
   const [countdown, setCountdown] = useState(0);
   const [stars, setStars] = useState<{ id: number; x: number; y: number; size: number; opacity: number; animationDelay: number }[]>([]);
 
@@ -82,7 +80,6 @@ const Signup = () => {
       });
 
       if (response.ok) {
-        setOtpSent(true);
         setFormData({ ...formData, email });
         setCountdown(60); // 60 seconds countdown
         setStep("otp");
@@ -90,7 +87,7 @@ const Signup = () => {
         const data = await response.json();
         setError(data.detail || "Failed to send OTP");
       }
-    } catch (err) {
+    } catch {
       setError("An error occurred. Please try again.");
     } finally {
       setIsLoading(false);
@@ -112,13 +109,12 @@ const Signup = () => {
       });
 
       if (response.ok) {
-        setOtpVerified(true);
         setStep("form");
       } else {
         const data = await response.json();
         setError(data.detail || "Invalid OTP");
       }
-    } catch (err) {
+    } catch {
       setError("An error occurred. Please try again.");
     } finally {
       setIsLoading(false);
@@ -147,7 +143,7 @@ const Signup = () => {
         const data = await response.json();
         setError(data.detail || "Failed to resend OTP");
       }
-    } catch (err) {
+    } catch {
       setError("An error occurred. Please try again.");
     } finally {
       setIsLoading(false);
@@ -190,7 +186,7 @@ const Signup = () => {
     });
   };
 
-  // Render the email input step
+// Render the email input step
   if (step === "email") {
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black flex items-center justify-center p-4">
