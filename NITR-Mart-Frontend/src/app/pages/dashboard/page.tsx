@@ -490,18 +490,22 @@ const Dashboard = () => {
                             </p>
                           </div>
                           <div className="space-y-4 mt-auto">
+
                             <div className="flex items-center space-x-3">
                               <div className="relative">
                                 <div className="w-10 h-10 bg-gradient-to-tl from-emerald-500 via-cyan-500 to-emerald-500 rounded-full flex items-center justify-center shadow-lg">
                                   <span className="text-sm font-bold text-white">
-                                    {product.seller.charAt(0).toUpperCase()}
+                                    {product.seller?.name?.charAt(0).toUpperCase() || "?"}
                                   </span>
                                 </div>
                                 <div className="absolute -inset-0.5 bg-gradient-to-r from-cyan-400 to-emerald-500 rounded-full opacity-30 group-hover:opacity-70 transition-opacity duration-300 blur-sm" />
                               </div>
                               <div className="flex-1 min-w-0">
                                 <p className="text-white text-sm font-semibold truncate">
-                                  {product.seller}
+                                  {product.seller?.name || "Unknown Seller"}
+                                </p>
+                                <p className="text-gray-400 text-xs truncate">
+                                  Roll No: {product.seller?.roll_number || "N/A"}
                                 </p>
                                 <p className="text-gray-400 text-xs">
                                   {formatTimeAgo(product.posted_at)}
