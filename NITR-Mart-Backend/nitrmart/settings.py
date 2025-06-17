@@ -110,6 +110,17 @@ AUTH_PASSWORD_VALIDATORS = [
 
 AUTH_USER_MODEL = 'users.User'
 
+EMAIL_BACKEND = os.getenv('EMAIL_BACKEND', 'django.core.mail.backends.smtp.EmailBackend')
+EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.gmail.com')
+EMAIL_PORT = os.getenv('EMAIL_PORT', 587)
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True').lower() == 'true'
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'NITR Mart <no-reply@nitrkl.ac.in>')
+
+OTP_EXPIRY_MINUTES = int(os.getenv('OTP_EXPIRY_MINUTES', 30))
+OTP_LENGTH = int(os.getenv('OTP_LENGTH', 6))
+
 
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = os.getenv('TIME_ZONE', 'Asia/Kolkata')
