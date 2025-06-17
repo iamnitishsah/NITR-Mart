@@ -5,13 +5,11 @@ import cloudinary
 import cloudinary.uploader
 from cloudinary.utils import cloudinary_url
 
-# Load environment variables
 from dotenv import load_dotenv
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Use environment variables with fallbacks
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-1b%o9an1b%wvoe1l*m^qj@l187ikzwt4l$7=2pc94r3l*_k#(5')
 
 DEBUG = os.getenv('DEBUG', 'True').lower() == 'true'
@@ -30,15 +28,15 @@ INSTALLED_APPS = [
     'cloudinary_storage',
     'rest_framework',
     'rest_framework_simplejwt',
-    'users',     # Custom app for user management
-    'products',  # Custom app for products
-    'reports',   # Custom app for reports
+    'users',
+    'products',
+    'reports',
 ]
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # For static files
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -84,7 +82,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'nitrmart.wsgi.application'
 
-# Database configuration using environment variables
 DATABASES = {
     'default': {
         'ENGINE': os.getenv('DB_ENGINE', 'django.db.backends.postgresql'),
@@ -119,14 +116,12 @@ TIME_ZONE = os.getenv('TIME_ZONE', 'Asia/Kolkata')
 USE_I18N = True
 USE_TZ = True
 
-# Static files configuration for Render
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Cloudinary configuration using environment variables
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': os.getenv('CLOUDINARY_CLOUD_NAME', ''),
     'API_KEY': os.getenv('CLOUDINARY_API_KEY', ''),
