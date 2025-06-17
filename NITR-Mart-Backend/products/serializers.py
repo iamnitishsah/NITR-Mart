@@ -5,7 +5,7 @@ from .models import Product, CATEGORIES
 User = get_user_model()
 
 class ProductSerializer(serializers.ModelSerializer):
-    seller = serializers.StringRelatedField(read_only=True)
+    seller = serializers.SerializerMethodField()
     image = serializers.ImageField(required=False, allow_null=True)
     category = serializers.ChoiceField(choices=CATEGORIES)
 
@@ -16,6 +16,13 @@ class ProductSerializer(serializers.ModelSerializer):
             'category', 'seller', 'is_sold', 'posted_at'
         ]
         read_only_fields = ['id', 'seller', 'posted_at', 'is_sold']
+
+    def get_seller(self, obj):
+        return {
+            "email": obj.seller.email,
+            "name": f"{obj.seller.first_name} {obj.seller.last_name}",
+            "roll_number": obj.seller.roll_no
+        }
 
     def validate_price(self, value):
         if value < 0:
