@@ -34,3 +34,12 @@ class ProductRetrieveUpdateView(generics.RetrieveUpdateAPIView):
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
         return Response(ProductSerializer(instance).data, status=status.HTTP_200_OK)
+
+class ProductDeleteView(generics.DestroyAPIView):
+    queryset = Product.objects.all()
+    permission_classes = [permissions.IsAuthenticated]
+
+    def perform_destroy(self, instance):
+        if self.request.user != instance.seller and not (self.request.user.is_staff or self.request.user.is_superuser):
+            self.permission_denied(self.request, message="You can only delete your own products.")
+        instance.delete()
