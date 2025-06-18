@@ -15,6 +15,7 @@ import {
   UserPlus,
   Users,
   ArrowLeft,
+  Phone,
 } from "lucide-react";
 
 const Signup = () => {
@@ -33,13 +34,16 @@ const Signup = () => {
     branch: "",
     department: "",
     roll_no: "",
+    wp_number: "", // Added WhatsApp number field
   });
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [countdown, setCountdown] = useState(0);
-  const [stars, setStars] = useState<{ id: number; x: number; y: number; size: number; opacity: number; animationDelay: number }[]>([]);
+  const [stars, setStars] = useState<
+      { id: number; x: number; y: number; size: number; opacity: number; animationDelay: number }[]
+  >([]);
 
   // Countdown timer for OTP resend
   useEffect(() => {
@@ -71,7 +75,7 @@ const Signup = () => {
     setError("");
 
     try {
-      const response = await fetch(" https://nitr-mart.onrender.com/users/send-otp/", {
+      const response = await fetch("https://nitr-mart.onrender.com/users/send-otp/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -81,7 +85,7 @@ const Signup = () => {
 
       if (response.ok) {
         setFormData({ ...formData, email });
-        setCountdown(60); // 60 seconds countdown
+        setCountdown(60);
         setStep("otp");
       } else {
         const data = await response.json();
@@ -100,7 +104,7 @@ const Signup = () => {
     setError("");
 
     try {
-      const response = await fetch(" https://nitr-mart.onrender.com/users/verify-otp/", {
+      const response = await fetch("https://nitr-mart.onrender.com/users/verify-otp/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -128,7 +132,7 @@ const Signup = () => {
     setError("");
 
     try {
-      const response = await fetch(" https://nitr-mart.onrender.com/users/send-otp/", {
+      const response = await fetch("https://nitr-mart.onrender.com/users/send-otp/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -155,8 +159,23 @@ const Signup = () => {
     setIsLoading(true);
     setError("");
 
+    // Validate password match
+    if (formData.password !== formData.password_confirm) {
+      setError("Passwords do not match");
+      setIsLoading(false);
+      return;
+    }
+
+    // Validate WhatsApp number format (basic validation)
+    const wpNumberRegex = /^\+?\d{10,15}$/;
+    if (formData.wp_number && !wpNumberRegex.test(formData.wp_number)) {
+      setError("Invalid WhatsApp number format");
+      setIsLoading(false);
+      return;
+    }
+
     try {
-      const response = await fetch(" https://nitr-mart.onrender.com/users/", {
+      const response = await fetch("https://nitr-mart.onrender.com/users/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -186,7 +205,7 @@ const Signup = () => {
     });
   };
 
-// Render the email input step
+  // Render the email input step
   if (step === "email") {
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black flex items-center justify-center p-4">
@@ -507,6 +526,26 @@ const Signup = () => {
                     </button>
                   </div>
                 </div>
+
+                {/* WhatsApp Number */}
+                <div className="space-y-2">
+                  <label
+                      htmlFor="wp_number"
+                      className="text-sm font-medium text-gray-300 flex items-center"
+                  >
+                    <Phone className="w-4 h-4 mr-2 text-teal-400" />
+                    WhatsApp Number
+                  </label>
+                  <input
+                      type="tel"
+                      id="wp_number"
+                      name="wp_number"
+                      value={formData.wp_number}
+                      onChange={handleChange}
+                      className="w-full px-4 py-3 bg-gray-800/50 border-2 border-gray-600 rounded-xl text-white placeholder-gray-400 focus:border-teal-500 focus:outline-none focus:ring-4 focus:ring-teal-500/20 transition-all duration-300 backdrop-blur-sm"
+                      placeholder="10 digits WhatsApp number"
+                  />
+                </div>
               </div>
 
               {/* Role-specific Fields */}
@@ -686,7 +725,7 @@ const Signup = () => {
             {/* Login Link */}
             <button
                 onClick={() => router.push("/auth/login")}
-                className="w-full bg-gray-800/50 border-2 border-gray-600 text-gray-300 font-semibold py-3 px-6 rounded-xl hover:bg-gray-700/50 hover:border-gray-500 focus:outline-none focus:ring-4 focus:ring-gray-500/20 transition-all duration-300 flex items-center justify-center group"
+                className="w-full bg-gray-800/50 border-2 border-gray-600 text-gray-300 font-semibold py-3 px-6 rounded-xl hover:bg-gray-700/50 hover:border-gray-500 focus:outline-none focus:ring-4 focus:ring-gray-500/20 transition-all duration-300 flex items-center justify-center"
             >
               Sign In
               <ArrowRight className="w-4 h-4 ml-2 text-cyan-400 group-hover:text-cyan-300 transition-colors" />
@@ -695,13 +734,15 @@ const Signup = () => {
 
           {/* Additional Info */}
           <div className="mt-6 text-center">
-            <p className="text-gray-400 text-sm">
-              Join thousands of NITR students in our trusted marketplace
-            </p>
+            <div className="mt-20 text-center">
+              <p className="text-gray-500/80 text-sm">
+                Join thousands of NITR students in our trusted marketplace
+              </p>
+            </div>
           </div>
         </div>
       </div>
-  );
-};
+        );
+        };
 
-export default Signup;
+        export default Signup;
