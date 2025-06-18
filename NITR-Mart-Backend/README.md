@@ -213,7 +213,8 @@ Handles user registration, OTP verification, and profile management. All user em
       "role": "student",
       "year": "3rd",
       "branch": "Computer Science",
-      "roll_no": "123456789"
+      "roll_no": "123456789",
+      "wp_number": "1234567890"
   }
   ```
   - `role`: Either `"student"` or `"faculty"`.
@@ -229,6 +230,7 @@ Handles user registration, OTP verification, and profile management. All user em
       "year": "3rd",
       "branch": "Computer Science",
       "roll_no": "123456789",
+      "wp_number": "1234567890",
       "is_verified": true,
       ...
   }
@@ -257,6 +259,7 @@ Handles user registration, OTP verification, and profile management. All user em
       "year": "3rd",
       "branch": "Computer Science",
       "roll_no": "123456789"
+      "wp_number": "1234567890"
   }'
   ```
 
