@@ -1,4 +1,4 @@
-# NITR Mart API Documentation
+# NITR Mart Backend API Documentation
 
 Welcome to the API documentation for NITR Mart, a marketplace application built with Django REST Framework (DRF). This API enables user registration with OTP verification, user profile management, and product listing for buying/selling items. The backend uses JSON Web Tokens (JWT) for authentication and Cloudinary for image storage.
 
