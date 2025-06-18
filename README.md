@@ -10,7 +10,7 @@ NITR Mart addresses the need for a centralized, campus-specific platform where N
 - **Promote Sustainability**: Encourage reuse of items like study materials and furniture, reducing waste.
 - **Enhance Connectivity**: Facilitate direct communication between buyers and sellers via WhatsApp.
 
-The project combines a robust Django REST Framework backend with a responsive frontend, leveraging technologies like JWT authentication, Cloudinary for media storage, and OTP-based registration to deliver a seamless experience.
+The project combines a robust Django REST Framework backend with a responsive Next.js frontend, leveraging technologies like JWT authentication, Cloudinary for media storage, and OTP-based registration to deliver a seamless experience.
 
 ## Features
 
@@ -41,13 +41,13 @@ The project combines a robust Django REST Framework backend with a responsive fr
 - **Email Verification**: Ensures all users are part of the NIT Rourkela community via `@nitrkl.ac.in` email validation.
 
 ### User Experience
-- **Responsive Frontend**: A modern, mobile-friendly interface for browsing products, managing profiles, and listing items, built with [insert frontend tech, e.g., React if applicable].
+- **Responsive Frontend**: A modern, mobile-friendly interface for browsing products, managing profiles, and listing items, built with Next.js.
 - **Intuitive Navigation**: Easy access to categories, user profiles, and product details, with clear calls-to-action like "Contact Seller".
 - **Real-Time Updates**: Product listings and user profiles reflect changes instantly, ensuring a dynamic experience.
 
 ## Project Structure
-- **Backend**: A Django REST Framework API handling user authentication, OTP verification, and product management. See `backend/README.md` for API details.
-- **Frontend**: A responsive web application for user interaction, including product browsing, listing, and WhatsApp redirection. See `frontend/README.md` for frontend details.
+- **Backend**: A Django REST Framework API handling user authentication, OTP verification, and product management. See `NITR-Mart-Backend/README.md` for API details.
+- **Frontend**: A responsive web application for user interaction, including product browsing, listing, and WhatsApp redirection. See `NITR-Mart-Frontend/README.md` for frontend details.
 
 ## Vision
 NITR Mart aims to be the go-to platform for NIT Rourkela’s campus community, fostering trust, convenience, and sustainability. Future enhancements may include:
