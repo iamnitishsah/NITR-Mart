@@ -21,7 +21,8 @@ class ProductSerializer(serializers.ModelSerializer):
         return {
             "email": obj.seller.email,
             "name": f"{obj.seller.first_name} {obj.seller.last_name}",
-            "roll_number": obj.seller.roll_no
+            "roll_number": obj.seller.roll_no,
+            "wp_number": obj.seller.wp_number
         }
 
     def validate_price(self, value):

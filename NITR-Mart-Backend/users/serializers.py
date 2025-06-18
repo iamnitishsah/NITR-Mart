@@ -100,7 +100,7 @@ class UserSerializer(serializers.ModelSerializer):
             'id', 'email', 'first_name', 'last_name',
             'year', 'branch', 'roll_no', 'is_verified',
             'created_at', 'updated_at', 'is_staff',
-            'is_superuser', 'role', 'department'
+            'is_superuser', 'role', 'department', 'wp_number'
         ]
         read_only_fields = [
             'id', 'created_at', 'updated_at',
@@ -136,7 +136,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
         fields = [
             'email', 'password', 'otp',
             'first_name', 'last_name', 'year',
-            'branch', 'roll_no', 'role', 'department'
+            'branch', 'roll_no', 'role', 'department', 'wp_number'
         ]
         extra_kwargs = {
             'email': {'required': True},
@@ -214,7 +214,7 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         fields = [
             'email', 'password', 'current_password',
             'first_name', 'last_name', 'year',
-            'branch', 'roll_no', 'department'
+            'branch', 'roll_no', 'department', 'wp_number'
         ]
 
     def validate(self, data):

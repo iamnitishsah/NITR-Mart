@@ -58,6 +58,7 @@ class User(AbstractUser):
     username = None
     email = models.EmailField(unique=True)
     role = models.CharField(max_length=20, default="student")
+    wp_number = models.CharField(max_length=10, unique=True)
 
     # Student fields
     year = models.CharField(max_length=10, blank=True, null=True)
