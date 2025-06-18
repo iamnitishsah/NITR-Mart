@@ -58,5 +58,5 @@ NITR Mart aims to be the go-to platform for NIT Rourkela’s campus community, f
 
 ## Contact
 For feedback or contributions, reach out to the development team:
-- Email: support@nitrkl.ac.in
-- GitHub: [NITR-Mart-Repo](https://github.com/nitr-mart)
+- Email: nitrmart2027@gmail.com
+- GitHub: [NITR-Mart-Repo](https://github.com/iamnitishsah/NITR-Mart)
