@@ -302,43 +302,43 @@ const Dashboard = () => {
     setStars(generateStars(150));
   }, []);
 
-  // New function to delete product
-  const deleteProduct = async (productId: number) => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      alert("You must be logged in to delete a product.");
-      return;
-    }
-    try {
-      const res = await fetch(
-        `https://nitr-mart.onrender.com/products/${productId}/delete/`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      if (res.status === 204) {
-        setProducts((prevProducts) =>
-          prevProducts.filter((p) => p.id !== productId)
-        );
-      } else {
-        const contentType = res.headers.get("Content-Type");
-        if (contentType && contentType.includes("application/json")) {
-          const data = await res.json();
-          alert(data.detail || "Failed to delete product.");
-        } else {
-          const text = await res.text();
-          console.error("Unexpected response:", text);
-          alert("Failed to delete product. Please check the server logs.");
-        }
-      }
-    } catch (err) {
-      console.error("Failed to delete product", err);
-      alert("Failed to delete product.");
-    }
-  };
+  // // New function to delete product
+  // const deleteProduct = async (productId: number) => {
+  //   const token = localStorage.getItem("token");
+  //   if (!token) {
+  //     alert("You must be logged in to delete a product.");
+  //     return;
+  //   }
+  //   try {
+  //     const res = await fetch(
+  //       `https://nitr-mart.onrender.com/products/${productId}/delete/`,
+  //       {
+  //         method: "DELETE",
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       }
+  //     );
+  //     if (res.status === 204) {
+  //       setProducts((prevProducts) =>
+  //         prevProducts.filter((p) => p.id !== productId)
+  //       );
+  //     } else {
+  //       const contentType = res.headers.get("Content-Type");
+  //       if (contentType && contentType.includes("application/json")) {
+  //         const data = await res.json();
+  //         alert(data.detail || "Failed to delete product.");
+  //       } else {
+  //         const text = await res.text();
+  //         console.error("Unexpected response:", text);
+  //         alert("Failed to delete product. Please check the server logs.");
+  //       }
+  //     }
+  //   } catch (err) {
+  //     console.error("Failed to delete product", err);
+  //     alert("Failed to delete product.");
+  //   }
+  // };
 
   const updateProduct = (productId: number) => {
     router.push(`/pages/updateproduct/${productId}`); // Navigate to the update product page
@@ -347,36 +347,37 @@ const Dashboard = () => {
   const markProductAsSold = async (productId: number) => {
     const token = localStorage.getItem("token");
     if (!token) {
-      alert("You must be logged in to delete a product.");
+      alert("You must be logged in to mark a product as sold.");
       return;
     }
 
-    const confirmDelete = window.confirm(
-      "Are you sure you want to mark this item as sold and delete it permanently?"
+    const confirmMarkSold = window.confirm(
+        "Are you sure you want to mark this item as sold?"
     );
-    if (!confirmDelete) return;
+    if (!confirmMarkSold) return;
 
     try {
       const res = await fetch(
-        `https://nitr-mart.onrender.com/products/${productId}/delete/`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+          `https://nitr-mart.onrender.com/products/${productId}/`,
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({ is_sold: true }),
+          }
       );
 
-      if (res.status === 204) {
-        setProducts((prev) => prev.filter((p) => p.id !== productId));
-        alert("Product marked as sold and permanently deleted.");
+      if (res.ok) {
+        alert("Product marked as sold.");
       } else {
         const error = await res.text();
-        alert("Failed to delete product: " + error);
+        alert("Failed to mark as sold: " + error);
       }
     } catch (err) {
-      console.error("Error deleting product:", err);
-      alert("Failed to delete product.");
+      console.error("Error marking product as sold:", err);
+      alert("Failed to mark product as sold.");
     }
   };
 
@@ -773,13 +774,13 @@ const Dashboard = () => {
                                 Edit
                               </button>
 
-                              <button
-                                onClick={() => deleteProduct(product.id)}
-                                className="flex-1 flex items-center justify-center px-3 py-2 rounded-lg font-semibold text-red-400 bg-red-700/10 hover:bg-red-700/20"
-                              >
-                                <Trash2 className="w-4 h-4 mr-1" />
-                                Delete
-                              </button>
+                              {/*<button*/}
+                              {/*  onClick={() => deleteProduct(product.id)}*/}
+                              {/*  className="flex-1 flex items-center justify-center px-3 py-2 rounded-lg font-semibold text-red-400 bg-red-700/10 hover:bg-red-700/20"*/}
+                              {/*>*/}
+                              {/*  <Trash2 className="w-4 h-4 mr-1" />*/}
+                              {/*  Delete*/}
+                              {/*</button>*/}
                             </div>
                           )}
                         </div>
