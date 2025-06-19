@@ -3,6 +3,7 @@ import {
   Bike,
   BookOpen,
   Boxes,
+  CheckCircle,
   Coffee,
   Dumbbell,
   Edit3,
@@ -114,6 +115,23 @@ const Dashboard = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const [formData, setFormData] = useState<{
+    title: string;
+    description: string;
+    price: string;
+    negotiable: boolean;
+    image: File | null;
+    category: string;
+    is_sold: boolean;
+  }>({
+    title: "",
+    description: "",
+    price: "",
+    negotiable: false,
+    image: null,
+    category: "Others",
+    is_sold: false,
+  });
 
   const categories = [
     {
@@ -242,6 +260,9 @@ const Dashboard = () => {
   const filteredProducts = useMemo(() => {
     let filtered = products;
 
+    // Filter out sold products - this is the key change
+    filtered = filtered.filter((product) => !product.is_sold);
+
     if (selectedCategory !== "all") {
       filtered = filtered.filter(
         (product) => product.category === selectedCategory
@@ -322,6 +343,43 @@ const Dashboard = () => {
   const updateProduct = (productId: number) => {
     router.push(`/pages/updateproduct/${productId}`); // Navigate to the update product page
   };
+
+  const markProductAsSold = async (productId: number) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("You must be logged in to delete a product.");
+      return;
+    }
+
+    const confirmDelete = window.confirm(
+      "Are you sure you want to mark this item as sold and delete it permanently?"
+    );
+    if (!confirmDelete) return;
+
+    try {
+      const res = await fetch(
+        `https://nitr-mart.onrender.com/products/${productId}/delete/`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (res.status === 204) {
+        setProducts((prev) => prev.filter((p) => p.id !== productId));
+        alert("Product marked as sold and permanently deleted.");
+      } else {
+        const error = await res.text();
+        alert("Failed to delete product: " + error);
+      }
+    } catch (err) {
+      console.error("Error deleting product:", err);
+      alert("Failed to delete product.");
+    }
+  };
+
   const handleContactClick = (seller: Seller, itemTitle: string) => {
     const phone = seller.wp_number.replace(/\D/g, "");
     const message = encodeURIComponent(
@@ -565,6 +623,14 @@ const Dashboard = () => {
               <div className="flex flex-wrap gap-2">
                 {categories.map((category) => {
                   const IconComponent = category.icon;
+                  // Update category count to only show available products
+                  const categoryCount =
+                    category.value === "all"
+                      ? products.filter((p) => !p.is_sold).length
+                      : products.filter(
+                          (p) => p.category === category.value && !p.is_sold
+                        ).length;
+
                   return (
                     <button
                       key={category.value}
@@ -579,11 +645,7 @@ const Dashboard = () => {
                       {category.label}
                       {category.value !== "all" && (
                         <span className="ml-2 px-2 py-0.5 bg-white/20 rounded-full text-xs">
-                          {
-                            products.filter(
-                              (p) => p.category === category.value
-                            ).length
-                          }
+                          {categoryCount}
                         </span>
                       )}
                     </button>
@@ -594,39 +656,37 @@ const Dashboard = () => {
           </div>
 
           {/* Products Section */}
-          <div className="pb-16">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-white">
+          <div className="pb-20 px-4 md:px-6">
+            <div className="flex items-center justify-between mb-8">
+              <h2 className="text-3xl font-bold text-white tracking-tight">
                 {selectedCategory === "all"
-                  ? "All Products"
+                  ? "Available Products"
                   : categories.find((c) => c.value === selectedCategory)?.label}
-                <span className="text-cyan-400 text-lg ml-2 font-normal">
+                <span className="text-cyan-400 text-lg ml-2 font-medium">
                   ({filteredProducts.length})
                 </span>
               </h2>
             </div>
 
             {loading ? (
-              <div className="flex justify-center items-center py-24">
-                <div className="animate-spin rounded-full h-12 w-12 border-4 border-cyan-500/20 border-t-cyan-500"></div>
+              <div className="flex justify-center items-center py-32">
+                <div className="animate-spin rounded-full h-12 w-12 border-4 border-cyan-500/20 border-t-cyan-500" />
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                 {filteredProducts.length > 0 ? (
                   filteredProducts.map((product) => (
                     <div
                       key={product.id}
-                      className="group bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10 overflow-hidden hover:border-cyan-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-cyan-500/10"
+                      className="group flex flex-col bg-white/5 backdrop-blur-lg rounded-2xl border border-white/10 overflow-hidden hover:shadow-lg hover:border-cyan-500/50 transition-all duration-300"
                     >
-                      {/* Product Image */}
-                      <div className="relative w-full h-48 overflow-hidden bg-gray-800/50">
+                      {/* Image */}
+                      <div className="relative h-48 bg-gray-800/50 overflow-hidden">
                         {product.image ? (
                           <img
                             src={product.image}
                             alt={product.title}
-                            width={400}
-                            height={300}
-                            className="object-cover group-hover:scale-105 transition-transform duration-300"
+                            className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
                           />
                         ) : (
                           <div className="w-full h-full flex items-center justify-center">
@@ -635,90 +695,89 @@ const Dashboard = () => {
                         )}
 
                         {/* Price Badge */}
-                        <div className="absolute top-3 right-3">
-                          <div className="bg-gradient-to-r from-cyan-500 to-emerald-600 text-white px-3 py-1 rounded-full text-sm font-bold">
-                            ₹{product.price.toLocaleString()}
-                          </div>
+                        <div className="absolute top-3 right-3 text-sm font-bold text-white px-3 py-1 rounded-full bg-gradient-to-r from-cyan-500 to-emerald-600 shadow-md">
+                          ₹{product.price.toLocaleString()}
                         </div>
 
-                        {/* Negotiable Badge */}
+                        {/* Negotiable */}
                         {product.negotiable && (
-                          <div className="absolute top-3 left-3">
-                            <div className="bg-yellow-500 text-black px-2 py-1 rounded-full text-xs font-bold">
-                              Negotiable
-                            </div>
+                          <div className="absolute top-3 left-3 text-xs font-bold px-2 py-1 rounded-full bg-yellow-500 text-black shadow-md">
+                            Negotiable
                           </div>
                         )}
                       </div>
 
                       {/* Product Details */}
-                      <div className="p-6 flex-1">
-                        <div className="flex items-start justify-between mb-3">
-                          <div className="flex-1">
-                            <h3 className="text-lg font-bold text-white mb-2 line-clamp-2">
-                              {product.title}
-                            </h3>
-                            <div className="inline-flex items-center px-2 py-1 bg-white/10 rounded-md">
-                              <Tag className="w-3 h-3 mr-1 text-cyan-400" />
-                              <span className="text-xs text-gray-300">
-                                {product.category}
-                              </span>
-                            </div>
+                      <div className="flex flex-col justify-between flex-1 p-5">
+                        <div>
+                          <h3 className="text-lg font-semibold text-white mb-2 line-clamp-2">
+                            {product.title}
+                          </h3>
+                          <div className="inline-flex items-center bg-white/10 text-xs px-2 py-1 rounded-md text-gray-300 mb-3">
+                            <Tag className="w-3 h-3 mr-1 text-cyan-400" />
+                            {product.category}
                           </div>
+
+                          <p className="text-sm text-gray-400 mb-4 line-clamp-2">
+                            {product.description}
+                          </p>
                         </div>
 
-                        <p className="text-gray-300 text-sm mb-4 line-clamp-2">
-                          {product.description}
-                        </p>
-
-                        {/* Seller Info */}
-                        <div className="flex items-center space-x-3 mb-4 p-3 bg-white/5 rounded-lg">
-                          <div className="w-10 h-10 bg-gradient-to-br from-cyan-400 to-emerald-600 rounded-full flex items-center justify-center">
-                            <span className="text-sm font-bold text-white">
-                              {product.seller.name.charAt(0).toUpperCase()}
-                            </span>
+                        {/* Seller */}
+                        <div className="flex items-center space-x-3 mb-5 p-3 rounded-lg bg-white/5">
+                          <div className="w-10 h-10 flex items-center justify-center bg-gradient-to-br from-cyan-400 to-emerald-600 text-white rounded-full font-semibold">
+                            {product.seller.name.charAt(0).toUpperCase()}
                           </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-white text-sm font-medium truncate">
+                          <div className="min-w-0">
+                            <p className="text-sm text-white truncate font-medium">
                               {product.seller.name}
                             </p>
-                            <p className="text-gray-400 text-xs">
+                            <p className="text-xs text-gray-400 truncate">
                               {product.seller.roll_number} •{" "}
                               {formatTimeAgo(product.posted_at)}
                             </p>
                           </div>
                         </div>
 
-                        {/* Action Buttons */}
+                        {/* Actions */}
                         <div className="space-y-2">
                           <button
                             onClick={() =>
                               handleContactClick(product.seller, product.title)
                             }
-                            className="w-full flex items-center justify-center px-4 py-3 bg-gradient-to-t from-gray-900 to-sky-800 text-white rounded-lg font-medium hover:from-gray-950 hover:to-sky-900 transition-all duration-200"
+                            className="w-full flex items-center justify-center px-4 py-3 bg-gradient-to-br from-sky-700 to-blue-800 text-white rounded-lg font-medium hover:from-sky-800 hover:to-blue-900 transition duration-200 shadow"
                           >
                             <Phone className="w-4 h-4 mr-2" />
                             Contact Seller
                           </button>
 
                           {user?.email === product.seller?.email && (
-                            <div className="flex space-x-2">
+                            <div className="flex gap-2">
+                              <button
+                                onClick={() => markProductAsSold(product.id)}
+                                className="flex-1 flex items-center justify-center px-3 py-2 rounded-lg font-semibold text-white bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 shadow"
+                              >
+                                <CheckCircle className="w-4 h-4 mr-1" />
+                                Sold
+                              </button>
+
                               <button
                                 onClick={() =>
                                   router.push(
-                                    `/pages/update-product/${product.id}`
+                                    `/pages/updateproduct/${product.id}`
                                   )
                                 }
-                                className="flex-1 flex items-center justify-center px-3 py-2 bg-yellow-500/20 text-yellow-400 rounded-lg font-medium hover:bg-yellow-500/30 transition-colors"
+                                className="flex-1 flex items-center justify-center px-3 py-2 rounded-lg font-semibold text-yellow-400 bg-yellow-500/10 hover:bg-yellow-500/20"
                               >
-                                <Edit3 className="w-4 h-4 mr-2" />
+                                <Edit3 className="w-4 h-4 mr-1" />
                                 Edit
                               </button>
+
                               <button
                                 onClick={() => deleteProduct(product.id)}
-                                className="flex-1 flex items-center justify-center px-3 py-2 bg-red-700/20 text-red-400 rounded-lg font-medium hover:bg-red-600/30 transition-colors"
+                                className="flex-1 flex items-center justify-center px-3 py-2 rounded-lg font-semibold text-red-400 bg-red-700/10 hover:bg-red-700/20"
                               >
-                                <Trash2 className="w-4 h-4 mr-2" />
+                                <Trash2 className="w-4 h-4 mr-1" />
                                 Delete
                               </button>
                             </div>
@@ -733,12 +792,12 @@ const Dashboard = () => {
                       <div className="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6">
                         <Search className="w-10 h-10 text-gray-500" />
                       </div>
-                      <h3 className="text-xl font-bold text-white mb-2">
+                      <h3 className="text-2xl font-bold text-white mb-2">
                         No products found
                       </h3>
                       <p className="text-gray-400">
                         Try adjusting your search terms or browse different
-                        categories
+                        categories.
                       </p>
                     </div>
                   </div>
