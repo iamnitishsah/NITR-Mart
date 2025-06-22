@@ -207,7 +207,7 @@ const Dashboard = () => {
       }
 
       try {
-        const res = await fetch("https://nitr-mart.onrender.com/users/me/", {
+        const res = await fetch("https://nitr-mart-production.up.railway.app/users/me/", {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (res.ok) {
@@ -237,7 +237,7 @@ const Dashboard = () => {
     setLoading(true);
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch("https://nitr-mart.onrender.com/products/", {
+      const res = await fetch("https://nitr-mart-production.up.railway.app/products/", {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (res.ok) {
@@ -311,7 +311,7 @@ const Dashboard = () => {
   //   }
   //   try {
   //     const res = await fetch(
-  //       `https://nitr-mart.onrender.com/products/${productId}/delete/`,
+  //       `https://nitr-mart-production.up.railway.app/products/${productId}/delete/`,
   //       {
   //         method: "DELETE",
   //         headers: {
@@ -358,7 +358,7 @@ const Dashboard = () => {
 
     try {
       const res = await fetch(
-          `https://nitr-mart.onrender.com/products/${productId}/`,
+          `https://nitr-mart-production.up.railway.app/products/${productId}/`,
           {
             method: "PATCH",
             headers: {

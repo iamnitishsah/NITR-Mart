@@ -158,7 +158,7 @@ const UpdateProductPage = ({ params }: { params: { id: string } }) => {
 
     try {
       const res = await fetch(
-        `https://nitr-mart.onrender.com/products/${params.id}/`,
+        `https://nitr-mart-production.up.railway.app/products/${params.id}/`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -278,7 +278,7 @@ const UpdateProductPage = ({ params }: { params: { id: string } }) => {
 
     try {
       const res = await fetch(
-        `https://nitr-mart.onrender.com/products/${params.id}/`,
+        `https://nitr-mart-production.up.railway.app/products/${params.id}/`,
         {
           method: "PUT",
           headers: {

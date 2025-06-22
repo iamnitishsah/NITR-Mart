@@ -75,7 +75,7 @@ const Signup = () => {
     setError("");
 
     try {
-      const response = await fetch("https://nitr-mart.onrender.com/users/send-otp/", {
+      const response = await fetch("https://nitr-mart-production.up.railway.app/users/send-otp/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -104,7 +104,7 @@ const Signup = () => {
     setError("");
 
     try {
-      const response = await fetch("https://nitr-mart.onrender.com/users/verify-otp/", {
+      const response = await fetch("https://nitr-mart-production.up.railway.app/users/verify-otp/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -132,7 +132,7 @@ const Signup = () => {
     setError("");
 
     try {
-      const response = await fetch("https://nitr-mart.onrender.com/users/send-otp/", {
+      const response = await fetch("https://nitr-mart-production.up.railway.app/users/send-otp/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -175,7 +175,7 @@ const Signup = () => {
     }
 
     try {
-      const response = await fetch("https://nitr-mart.onrender.com/users/", {
+      const response = await fetch("https://nitr-mart-production.up.railway.app/users/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

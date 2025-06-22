@@ -18,7 +18,7 @@ const Login = () => {
     setError("");
 
     try {
-      const response = await fetch("https://nitr-mart.onrender.com/users/token/", {
+      const response = await fetch("https://nitr-mart-production.up.railway.app/users/token/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -35,7 +35,7 @@ const Login = () => {
 
           // Fetch current user details and log them
           try {
-            const userResponse = await fetch("https://nitr-mart.onrender.com/users/me/", {
+            const userResponse = await fetch("https://nitr-mart-production.up.railway.app/users/me/", {
               method: "GET",
               headers: {
                 Authorization: `Bearer ${data.access}`,
