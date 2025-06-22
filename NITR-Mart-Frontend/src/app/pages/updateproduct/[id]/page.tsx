@@ -160,7 +160,7 @@ const UpdateProductPage = () => {
 
     try {
       const res = await fetch(
-        `https://nitr-mart-production.up.railway.app/products/${params.id}/`,
+        `https://nitr-mart-production.up.railway.app/products/${id}/`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
