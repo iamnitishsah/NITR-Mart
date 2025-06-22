@@ -4,14 +4,14 @@ import {
   ArrowLeft,
   Bike,
   BookOpen,
-  Boxes,
+  // Boxes,
   CheckCircle,
   Coffee,
-  DollarSign,
+  // DollarSign,
   Dumbbell,
-  FileText,
+  // FileText,
   FlaskConical,
-  ImageIcon,
+  // ImageIcon,
   Laptop,
   Loader2,
   Paintbrush,
@@ -620,8 +620,8 @@ const UpdateProductPage = ({ params }: { params: { id: string } }) => {
                   Product not found
                 </h3>
                 <p className="text-gray-400">
-                  The product you're trying to update doesn't exist or you
-                  don't have permission to edit it.
+                  The product you&#39;re trying to update doesn&#39;t exist or you
+                  don&#39;t have permission to edit it.
                 </p>
               </div>
             </div>

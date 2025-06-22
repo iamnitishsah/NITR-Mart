@@ -18,7 +18,6 @@ import {
   Search,
   ShoppingBag,
   Tag,
-  Trash2,
   TrendingUp,
   Users,
   X,
@@ -26,10 +25,6 @@ import {
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
-interface Props {
-  seller: Seller;
-  itemTitle: string;
-}
 
 interface User {
   firstName: string;
@@ -75,26 +70,6 @@ const formatTimeAgo = (dateString: string) => {
   return `${Math.floor(diffInHours / 24)}d ago`;
 };
 
-const ContactSellerButton = ({ seller, itemTitle }: Props) => {
-  const handleContactClick = () => {
-    const phone = seller.wp_number.replace(/\D/g, "");
-    const message = encodeURIComponent(
-      `Hi ${seller.name}, I came across your listing for "${itemTitle}" on NITR-Mart. I'm interested and would like to connect with you regarding the item.`
-    );
-    const whatsappURL = `https://wa.me/91${phone}?text=${message}`;
-    window.open(whatsappURL, "_blank");
-  };
-
-  return (
-    <button
-      onClick={handleContactClick}
-      className="w-full relative overflow-hidden bg-gradient-to-r from-cyan-500 to-emerald-600 hover:from-cyan-600 hover:to-emerald-700 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-[1.02] active:scale-[0.98] group/btn"
-    >
-      <span className="relative z-10 text-sm">Contact Seller</span>
-      <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 translate-x-[-100%] group-hover/btn:translate-x-[100%] transition-transform duration-700" />
-    </button>
-  );
-};
 
 const Dashboard = () => {
   const [stars, setStars] = useState<
@@ -115,23 +90,23 @@ const Dashboard = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const [formData, setFormData] = useState<{
-    title: string;
-    description: string;
-    price: string;
-    negotiable: boolean;
-    image: File | null;
-    category: string;
-    is_sold: boolean;
-  }>({
-    title: "",
-    description: "",
-    price: "",
-    negotiable: false,
-    image: null,
-    category: "Others",
-    is_sold: false,
-  });
+  // const [formData, setFormData] = useState<{
+  //   title: string;
+  //   description: string;
+  //   price: string;
+  //   negotiable: boolean;
+  //   image: File | null;
+  //   category: string;
+  //   is_sold: boolean;
+  // }>({
+  //   title: "",
+  //   description: "",
+  //   price: "",
+  //   negotiable: false,
+  //   image: null,
+  //   category: "Others",
+  //   is_sold: false,
+  // });
 
   const categories = [
     {
@@ -339,10 +314,7 @@ const Dashboard = () => {
   //     alert("Failed to delete product.");
   //   }
   // };
-
-  const updateProduct = (productId: number) => {
-    router.push(`/pages/updateproduct/${productId}`); // Navigate to the update product page
-  };
+  
 
   const markProductAsSold = async (productId: number) => {
     const token = localStorage.getItem("token");
