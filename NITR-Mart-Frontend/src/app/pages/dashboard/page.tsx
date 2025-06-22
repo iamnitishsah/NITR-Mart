@@ -13,7 +13,6 @@ import {
   LogOut,
   Menu,
   Paintbrush,
-  Phone,
   Plus,
   Search,
   ShoppingBag,
@@ -22,6 +21,7 @@ import {
   Users,
   X,
 } from "lucide-react";
+import { FaWhatsapp } from 'react-icons/fa';
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
@@ -728,7 +728,7 @@ const Dashboard = () => {
                             }
                             className="w-full flex items-center justify-center px-4 py-3 bg-gradient-to-br from-sky-700 to-blue-800 text-white rounded-lg font-medium hover:from-sky-800 hover:to-blue-900 transition duration-200 shadow"
                           >
-                            <Phone className="w-4 h-4 mr-2" />
+                            <FaWhatsapp className="w-4 h-4 mr-2" />
                             Contact Seller
                           </button>
 
