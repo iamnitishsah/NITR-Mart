@@ -24,7 +24,7 @@ import {
   Home,
   MoreHorizontal,
 } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FaRupeeSign } from "react-icons/fa";
 
@@ -96,7 +96,9 @@ const categories = [
   },
 ];
 
-const UpdateProductPage = ({ params }: { params: { id: string } }) => {
+const UpdateProductPage = () => {
+  const params = useParams();
+  const id = params.id as string;
   const [stars, setStars] = useState<
     {
       id: number;

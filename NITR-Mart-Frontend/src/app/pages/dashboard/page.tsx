@@ -314,7 +314,7 @@ const Dashboard = () => {
   //     alert("Failed to delete product.");
   //   }
   // };
-  
+
 
   const markProductAsSold = async (productId: number) => {
     const token = localStorage.getItem("token");
@@ -364,6 +364,14 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black relative">
+
+      {userLoading && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/80 backdrop-blur-sm">
+            <div className="animate-spin rounded-full h-16 w-16 border-4 border-cyan-500/20 border-t-cyan-500" />
+          </div>
+      )}
+
+
       {/* Background Stars */}
       <div className="fixed inset-0 pointer-events-none z-0">
         {stars.map((star) => (
