@@ -15,7 +15,6 @@ import {   ShoppingBag,
   MessageCircle,
   Shield,
   Zap,
-  Play,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
@@ -278,10 +277,6 @@ const WelcomePage = () => {
               Get Started Now
               <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
             </button>
-            <button className="bg-gray-800/50 border-2 border-gray-600 text-gray-300 font-semibold py-4 px-8 rounded-xl hover:bg-gray-700/50 hover:border-gray-500 focus:outline-none focus:ring-4 focus:ring-gray-500/20 transition-all duration-300 flex items-center justify-center group">
-              <Play className="w-5 h-5 mr-2 text-emerald-400" />
-              Watch Demo
-            </button>
           </div>
         </div>
       </section>
@@ -436,13 +431,11 @@ const WelcomePage = () => {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button 
-                className="bg-gradient-to-r from-cyan-500 to-emerald-600 text-white font-semibold py-4 px-8 rounded-xl hover:from-cyan-600 hover:to-emerald-700 focus:outline-none focus:ring-4 focus:ring-cyan-500/20 transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-cyan-500/30 transform hover:scale-105 flex items-center justify-center group">
+              <button onClick={() => navigation('/auth/login')} className="bg-gradient-to-r from-cyan-500 to-emerald-600 text-white font-semibold py-4 px-8 rounded-xl hover:from-cyan-600 hover:to-emerald-700 focus:outline-none focus:ring-4 focus:ring-cyan-500/20 transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-cyan-500/30 transform hover:scale-105 flex items-center justify-center group">
                 <ShoppingBag className="w-5 h-5 mr-2" />
                 Start Selling Now
-                <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
               </button>
-              <button className="bg-gray-800/50 border-2 border-gray-600 text-gray-300 font-semibold py-4 px-8 rounded-xl hover:bg-gray-700/50 hover:border-gray-500 focus:outline-none focus:ring-4 focus:ring-gray-500/20 transition-all duration-300 flex items-center justify-center hover:shadow-xl hover:shadow-purple-500/20 hover:scale-105">
+              <button onClick={() => navigation('/auth/login')} className="bg-gray-800/50 border-2 border-gray-600 text-gray-300 font-semibold py-4 px-8 rounded-xl hover:bg-gray-700/50 hover:border-gray-500 focus:outline-none focus:ring-4 focus:ring-gray-500/20 transition-all duration-300 flex items-center justify-center hover:shadow-xl hover:shadow-purple-500/20 hover:scale-105">
                 <Users className="w-5 h-5 mr-2 text-cyan-400" />
                 Browse Items
               </button>
@@ -453,7 +446,7 @@ const WelcomePage = () => {
 
       {/* Floating Action Button */}
       <div className="fixed bottom-8 right-8 z-50">
-        <button className="bg-gradient-to-r from-cyan-500 to-emerald-600 text-white p-4 rounded-full shadow-lg hover:shadow-xl hover:shadow-cyan-500/30 transition-all duration-300 animate-bounce hover:scale-110">
+        <button  onClick={() => navigation('/auth/login')} className="bg-gradient-to-r from-cyan-500 to-emerald-600 text-white p-4 rounded-full shadow-lg hover:shadow-xl hover:shadow-cyan-500/30 transition-all duration-300 animate-bounce hover:scale-110">
           <Star className="w-6 h-6" />
         </button>
       </div>

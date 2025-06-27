@@ -43,10 +43,30 @@ const Footer = () => {
   ];
 
   const socialLinks = [
-    { name: 'Github', href: '#', icon: RiGithubLine, color: 'hover:text-gray-300' },
-    { name: 'Twitter', href: '#', icon: RiTwitterXFill, color: 'hover:text-black' },
-    { name: 'Instagram', href: '#', icon: RiInstagramLine, color: 'hover:text-pink-400' },
-    { name: 'LinkedIn', href: '#', icon: RiLinkedinFill, color: 'hover:text-sky-500' },
+    {
+      name: 'Github',
+      href: 'https://github.com/iamnitishsah',
+      icon: RiGithubLine,
+      color: 'hover:text-gray-300'
+    },
+    {
+      name: 'Twitter',
+      href: 'https://x.com/nitishadow_?t=F4iYnXvQIkJQbHfacRxZIQ&s=08',
+      icon: RiTwitterXFill,
+      color: 'hover:text-black'
+    },
+    {
+      name: 'Instagram',
+      href: 'https://www.instagram.com/nitishadow_/',
+      icon: RiInstagramLine,
+      color: 'hover:text-pink-400'
+    },
+    {
+      name: 'LinkedIn',
+      href: 'https://www.linkedin.com/in/iamnitishsah',
+      icon: RiLinkedinFill,
+      color: 'hover:text-sky-500'
+    },
   ];
 
   return (
@@ -76,7 +96,11 @@ const Footer = () => {
               <div className="lg:col-span-2">
                 <div className="flex items-center mb-6">
                   <div className="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-b from-cyan-400 to-emerald-600 rounded-xl mr-4 shadow-lg">
-                    <Users className="w-6 h-6 text-white" />
+                    <img
+                        src="/logo.png"
+                        alt="NITR Mart Logo"
+                        className="w-full h-full object-cover"
+                    />
                   </div>
                   <div>
                     <h3 className="font-serif text-2xl font-black bg-gradient-to-r from-white via-gray-100 to-gray-300 bg-clip-text text-transparent">
@@ -99,7 +123,7 @@ const Footer = () => {
                   </div>
                   <div className="flex items-center text-gray-400">
                     <Mail className="w-4 h-4 mr-3 text-emerald-400" />
-                    <span className="text-sm">nitrmart@gmail.com</span>
+                    <span className="text-sm">nitrmart2027@gmail.com</span>
                   </div>
                   <div className="flex items-center text-gray-400">
                     <Phone className="w-4 h-4 mr-3 text-purple-400" />
@@ -199,7 +223,7 @@ const Footer = () => {
                   placeholder="Enter your email"
                   className="flex-1 px-4 py-3 bg-gray-800 border-2 border-gray-600 rounded-l-xl sm:rounded-r-none rounded-r-xl text-white placeholder-gray-400 focus:border-cyan-500 focus:outline-none focus:ring-4 focus:ring-cyan-500/20 transition-all duration-300"
                 />
-                <button className="px-6 py-3 bg-gradient-to-r from-cyan-500 to-emerald-600 text-white font-semibold rounded-r-xl sm:rounded-l-none rounded-l-xl hover:from-cyan-600 hover:to-emerald-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
+                <button  className="px-6 py-3 bg-gradient-to-r from-cyan-500 to-emerald-600 text-white font-semibold rounded-r-xl sm:rounded-l-none rounded-l-xl hover:from-cyan-600 hover:to-emerald-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
                   Subscribe
                 </button>
               </div>

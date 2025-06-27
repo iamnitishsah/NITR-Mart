@@ -415,7 +415,11 @@ const Dashboard = () => {
               {/* Logo */}
               <div className="flex items-center space-x-3">
                 <div className="w-10 h-10 bg-gradient-to-br from-cyan-400 to-emerald-600 rounded-xl flex items-center justify-center">
-                  <ShoppingBag className="w-6 h-6 text-white" />
+                  <img
+                      src="/logo.png"
+                      alt="NITR Mart Logo"
+                      className="w-full h-full object-cover"
+                  />
                 </div>
                 <div>
                   <h1 className="text-xl font-serif font-black bg-gradient-to-r from-white via-gray-100 to-gray-300 bg-clip-text text-transparent">
