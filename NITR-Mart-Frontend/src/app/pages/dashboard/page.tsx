@@ -456,6 +456,11 @@ const Dashboard = () => {
                         <p className="text-blue-400 text-xs font-mono tracking-wider">
                           Roll No: {user?.rollNo || ""}
                         </p>
+                        <button
+                            className="mt-1 text-xs text-cyan-200 hover:text-white underline underline-offset-4"
+                        >
+                          View/Edit
+                        </button>
                       </div>
                     </div>
                   </Link>
@@ -487,22 +492,28 @@ const Dashboard = () => {
           {isMobileMenuOpen && (
             <div className="md:hidden bg-gray-900/95 backdrop-blur-xl border-t border-gray-700/50">
               <div className="px-4 py-4 space-y-3">
-                <div className="flex items-center space-x-3 p-3 bg-gray-800/50 rounded-lg">
-                  <div className="w-10 h-10 bg-gradient-to-br from-cyan-400 to-emerald-600 rounded-lg flex items-center justify-center">
-                    <span className="text-sm font-bold text-white">
-                      {user?.firstName?.charAt(0) || ""}
-                      {user?.lastName?.charAt(0) || ""}
-                    </span>
+                <Link href="/pages/profile/" className="block">
+                  <div className="flex items-center space-x-3 p-3 bg-gray-800/50 rounded-lg hover:ring-2 hover:ring-cyan-400/40 transition duration-200 cursor-pointer">
+                    <div className="w-10 h-10 bg-gradient-to-br from-cyan-400 to-emerald-600 rounded-lg flex items-center justify-center">
+      <span className="text-sm font-bold text-white">
+        {user?.firstName?.charAt(0) || ""}
+        {user?.lastName?.charAt(0) || ""}
+      </span>
+                    </div>
+                    <div>
+                      <p className="text-white font-medium">
+                        {user?.firstName || ""} {user?.lastName || ""}
+                      </p>
+                      <p className="text-gray-400 text-sm">
+                        {user?.rollNo || ""}
+                      </p>
+                      <button className="text-xs text-cyan-300 mt-1 underline underline-offset-4 hover:text-white">
+                        View/Edit
+                      </button>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-white font-medium">
-                      {user?.firstName || ""} {user?.lastName || ""}
-                    </p>
-                    <p className="text-gray-400 text-sm">
-                      {user?.rollNo || ""}
-                    </p>
-                  </div>
-                </div>
+                </Link>
+
 
                 <button
                   onClick={() => {
