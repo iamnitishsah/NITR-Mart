@@ -88,13 +88,13 @@ const ProfilePage = () => {
     useEffect(() => {
         const fetchProfile = async () => {
             try {
-                const token = localStorage.getItem('access_token');
+                const token = localStorage.getItem('token');
                 if (!token) {
                     router.push('/auth/login');
                     return;
                 }
 
-                const response = await fetch('http://localhost:8000/api/users/me/', {
+                const response = await fetch('https://nitr-mart-production.up.railway.app/users/me/', {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -153,7 +153,7 @@ const ProfilePage = () => {
         }
 
         try {
-            const token = localStorage.getItem('access_token');
+            const token = localStorage.getItem('token');
             if (!token) {
                 router.push('/auth/login');
                 return;
@@ -177,7 +177,7 @@ const ProfilePage = () => {
                 updateData.current_password = formData.current_password;
             }
 
-            const response = await fetch(`http://localhost:8000/api/users/${profile?.id}/`, {
+            const response = await fetch(`https://nitr-mart-production.up.railway.app/users/${profile?.id}/`, {
                 method: 'PATCH',
                 headers: {
                     'Authorization': `Bearer ${token}`,

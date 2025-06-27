@@ -24,6 +24,7 @@ import {
 import { FaWhatsapp } from 'react-icons/fa';
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 
 
 interface User {
@@ -439,23 +440,25 @@ const Dashboard = () => {
                     SELL ITEM
                   </button>
 
-                  <div className="flex items-center space-x-4 bg-gradient-to-r from-slate-900 to-slate-800 rounded-xl px-5 py-2 border border-cyan-500/50 shadow-xl shadow-cyan-500/20">
-                    <div className="relative w-12 h-12 bg-gradient-to-tr from-cyan-400 to-green-600 rounded-lg flex items-center justify-center border border-cyan-300/60 shadow-lg shadow-cyan-400/40">
-                      <span className="text-sm font-bold text-white z-10">
-                        {user?.firstName?.charAt(0) || ""}
-                        {user?.lastName?.charAt(0) || ""}
-                      </span>
-                      <div className="absolute inset-0 bg-gradient-to-tr from-cyan-400/20 to-blue-600/20 rounded-lg animate-ping"></div>
+                  <Link href="/pages/profile/" className="block">
+                    <div className="flex items-center space-x-4 bg-gradient-to-r from-slate-900 to-slate-800 rounded-xl px-5 py-2 border border-cyan-500/50 shadow-xl shadow-cyan-500/20 hover:ring-2 hover:ring-cyan-400/40 transition duration-200 cursor-pointer">
+                      <div className="relative w-12 h-12 bg-gradient-to-tr from-cyan-400 to-green-600 rounded-lg flex items-center justify-center border border-cyan-300/60 shadow-lg shadow-cyan-400/40">
+                          <span className="text-sm font-bold text-white z-10">
+                            {user?.firstName?.charAt(0) || ""}
+                            {user?.lastName?.charAt(0) || ""}
+                          </span>
+                        <div className="absolute inset-0 bg-gradient-to-tr from-cyan-400/20 to-blue-600/20 rounded-lg animate-ping"></div>
+                      </div>
+                      <div className="hidden sm:block">
+                        <p className="text-cyan-300 text-sm font-semibold tracking-wide">
+                          {user?.firstName || ""} {user?.lastName || ""}
+                        </p>
+                        <p className="text-blue-400 text-xs font-mono tracking-wider">
+                          Roll No: {user?.rollNo || ""}
+                        </p>
+                      </div>
                     </div>
-                    <div className="hidden sm:block">
-                      <p className="text-cyan-300 text-sm font-semibold tracking-wide">
-                        {user?.firstName || ""} {user?.lastName || ""}
-                      </p>
-                      <p className="text-blue-400 text-xs font-mono tracking-wider">
-                        Roll No: {user?.rollNo || ""}
-                      </p>
-                    </div>
-                  </div>
+                  </Link>
                 </div>
 
                 <button
