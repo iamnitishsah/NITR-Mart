@@ -1,10 +1,19 @@
 "use client";
 import { ArrowRight, Eye, EyeOff, Lock, Mail, Zap } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState,useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const Login = () => {
-   const [stars, setStars] = useState<{ id: number; x: number; y: number; size: number; opacity: number; animationDelay: number }[]>([]);
+  const [stars, setStars] = useState<
+    {
+      id: number;
+      x: number;
+      y: number;
+      size: number;
+      opacity: number;
+      animationDelay: number;
+    }[]
+  >([]);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -18,57 +27,62 @@ const Login = () => {
     setError("");
 
     try {
-      const response = await fetch("https://nitr-mart-production.up.railway.app/users/token/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
+      const response = await fetch(
+        "https://nitr-mart-production.up.railway.app/users/token/",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, password }),
+        }
+      );
 
-        if (response.ok) {
-          const data = await response.json();
-          localStorage.setItem("token", data.access);
-          localStorage.setItem('refreshToken', data.refresh);
-          console.log("Token stored in localStorage:", data.access);
-          console.log("Login successful:", data);
+      if (response.ok) {
+        const data = await response.json();
+        localStorage.setItem("token", data.access);
+        localStorage.setItem("refreshToken", data.refresh);
+        console.log("Token stored in localStorage:", data.access);
+        console.log("Login successful:", data);
 
-          // Fetch current user details and log them
-          try {
-            const userResponse = await fetch("https://nitr-mart-production.up.railway.app/users/me/", {
+        // Fetch current user details and log them
+        try {
+          const userResponse = await fetch(
+            "https://nitr-mart-production.up.railway.app/users/me/",
+            {
               method: "GET",
               headers: {
                 Authorization: `Bearer ${data.access}`,
               },
-            });
-            if (userResponse.ok) {
-              const user = await userResponse.json();
-              router.push("/pages/dashboard");
-              console.log("User details:", {
-                email: user.email,
-                firstName: user.first_name,
-                lastName: user.last_name,
-                rollNo: user.roll_no,
-                branch: user.branch,
-              });
-            } else {
-              setError("Failed to fetch user details");
             }
-          } catch{
-            setError("An error occurred. Please try again.");
+          );
+          if (userResponse.ok) {
+            const user = await userResponse.json();
+            router.push("/pages/dashboard");
+            console.log("User details:", {
+              email: user.email,
+              firstName: user.first_name,
+              lastName: user.last_name,
+              rollNo: user.roll_no,
+              branch: user.branch,
+            });
+          } else {
+            setError("Failed to fetch user details");
           }
-         
-        } else {
+        } catch {
+          setError("An error occurred. Please try again.");
+        }
+      } else {
         const data = await response.json();
         setError(data.error || "Invalid email or password");
       }
-    } catch{
+    } catch {
       setError("An error occurred. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
- 
+
   useEffect(() => {
     const generateStars = (count: number) => {
       return Array.from({ length: count }, (_, i) => ({
@@ -242,6 +256,9 @@ const Login = () => {
           >
             Create New Account
             <Zap className="w-4 h-4 ml-2 text-yellow-400 group-hover:text-yellow-300 transition-colors" />
+          </button>
+          <button onClick={() => router.push("/auth/forgotpassword")}>
+            Forgot Password
           </button>
         </div>
 

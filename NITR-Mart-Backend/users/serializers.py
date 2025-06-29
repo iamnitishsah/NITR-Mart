@@ -25,14 +25,20 @@ class OTPSendSerializer(serializers.Serializer):
         """Create and send OTP to user's email"""
         email = validated_data['email'].lower()
 
+        # Check if user exists for this email
+        if not User.objects.filter(email=email).exists():
+            raise serializers.ValidationError(
+                {'email': 'No user found with this email address.'}
+            )
+
         OTPVerification.objects.filter(email=email).delete()
 
         otp_obj = OTPVerification.objects.create(email=email)
 
-        subject = 'Your OTP for NITR Mart Registration'
+        subject = 'Your OTP for NITR Mart Password Reset' # Changed subject
         context = {
             'otp': otp_obj.otp,
-            'expiry_minutes': settings.OTP_EXPIRY_MINUTES,
+            'expiry_minutes': getattr(settings, 'OTP_EXPIRY_MINUTES', 30), # Use getattr for default
         }
 
         html_message = render_to_string('otp_email.html', context)
@@ -76,9 +82,9 @@ class OTPVerifySerializer(serializers.Serializer):
             })
 
         if otp_obj.is_verified:
-            raise serializers.ValidationError({
-                'detail': 'OTP already verified'
-            })
+            # If already verified, no need to re-verify, just return
+            data['otp_obj'] = otp_obj
+            return data
 
         data['otp_obj'] = otp_obj
         return data
@@ -150,7 +156,6 @@ class UserCreateSerializer(serializers.ModelSerializer):
         otp = data.get('otp')
         role = data.get('role', 'student')
 
-        # Verify OTP
         try:
             otp_obj = OTPVerification.objects.get(
                 email=email,
@@ -247,3 +252,33 @@ class UserUpdateSerializer(serializers.ModelSerializer):
 
         instance.save()
         return instance
+
+
+class PasswordResetConfirmSerializer(serializers.Serializer):
+    email = serializers.EmailField(required=True)
+    new_password = serializers.CharField(
+        write_only=True,
+        required=True,
+        min_length=8,
+        style={'input_type': 'password'},
+        help_text='New password must be at least 8 characters'
+    )
+    confirm_password = serializers.CharField(
+        write_only=True,
+        required=True,
+        min_length=8,
+        style={'input_type': 'password'},
+        help_text='Confirm new password'
+    )
+    def validate(self, data):
+        email = data.get('email')
+        new_password = data.get('new_password')
+        confirm_password = data.get('confirm_password')
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            raise serializers.ValidationError({'email': 'No user found with this email address.'})
+        if new_password != confirm_password:
+            raise serializers.ValidationError({'confirm_password': 'New password and confirm password do not match.'})
+        data['user'] = user
+        return data

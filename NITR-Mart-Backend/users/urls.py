@@ -6,6 +6,8 @@ from .views import (
     CurrentUserView,
     OTPSendView,
     OTPVerifyView,
+    PasswordResetConfirmView,
+    CheckEmailView
 )
 
 app_name = 'users'
@@ -15,7 +17,11 @@ urlpatterns = [
     path('me/', CurrentUserView.as_view(), name='current-user'),
     path('<int:pk>/', UserRetrieveUpdateView.as_view(), name='user-retrieve-update'),
     path('token/', TokenObtainPairView.as_view(), name='token-obtain-pair'),
+    path('password-reset/confirm/', PasswordResetConfirmView.as_view(), name='password-reset-confirm'),
+     path('check-email/', CheckEmailView.as_view(), name='check-email'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token-refresh'),
     path('send-otp/', OTPSendView.as_view(), name='send-otp'),
     path('verify-otp/', OTPVerifyView.as_view(), name='verify-otp'),
+
 ]
+
