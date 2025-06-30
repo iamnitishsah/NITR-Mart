@@ -10,7 +10,6 @@ import {
   BookOpen,
   Laptop,
   Coffee,
-  Gamepad2,
   Shield,
   HelpCircle,
   FileText,

@@ -1,3 +1,4 @@
+"use client";
 import { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
@@ -48,7 +49,7 @@ export default function ProfessionalFAQ() {
             Frequently Asked Questions
           </h2>
           <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-            Find answers to common questions about NITR Mart. Can't find what you're looking for? Contact our support team.
+            Find answers to common questions about NITR Mart. Can&apos;t find what you&apos;re looking for? Contact our support team.
           </p>
         </div>
 

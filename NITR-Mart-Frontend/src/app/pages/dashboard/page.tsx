@@ -21,11 +21,10 @@ import {
   Users,
   X,
 } from "lucide-react";
-import { FaWhatsapp } from 'react-icons/fa';
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import Link from "next/link";
-
+import { FaWhatsapp } from "react-icons/fa";
 
 interface User {
   firstName: string;
@@ -71,7 +70,6 @@ const formatTimeAgo = (dateString: string) => {
   return `${Math.floor(diffInHours / 24)}d ago`;
 };
 
-
 const Dashboard = () => {
   const [stars, setStars] = useState<
     {
@@ -89,25 +87,7 @@ const Dashboard = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const [loading, setLoading] = useState(false);
   const router = useRouter();
-  // const [formData, setFormData] = useState<{
-  //   title: string;
-  //   description: string;
-  //   price: string;
-  //   negotiable: boolean;
-  //   image: File | null;
-  //   category: string;
-  //   is_sold: boolean;
-  // }>({
-  //   title: "",
-  //   description: "",
-  //   price: "",
-  //   negotiable: false,
-  //   image: null,
-  //   category: "Others",
-  //   is_sold: false,
-  // });
 
   const categories = [
     {
@@ -183,9 +163,12 @@ const Dashboard = () => {
       }
 
       try {
-        const res = await fetch("https://nitr-mart-production.up.railway.app/users/me/", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const res = await fetch(
+          "https://nitr-mart-production.up.railway.app/users/me/",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
         if (res.ok) {
           const data = await res.json();
           setUser({
@@ -210,21 +193,22 @@ const Dashboard = () => {
   }, [router]);
 
   const fetchProducts = async () => {
-    setLoading(true);
+   
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch("https://nitr-mart-production.up.railway.app/products/", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await fetch(
+        "https://nitr-mart-production.up.railway.app/products/",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       if (res.ok) {
         const data = await res.json();
         setProducts(data);
       }
     } catch (err) {
       console.error("Failed to fetch products", err);
-    } finally {
-      setLoading(false);
-    }
+    } 
   };
 
   useEffect(() => {
@@ -278,45 +262,6 @@ const Dashboard = () => {
     setStars(generateStars(150));
   }, []);
 
-  // // New function to delete product
-  // const deleteProduct = async (productId: number) => {
-  //   const token = localStorage.getItem("token");
-  //   if (!token) {
-  //     alert("You must be logged in to delete a product.");
-  //     return;
-  //   }
-  //   try {
-  //     const res = await fetch(
-  //       `https://nitr-mart-production.up.railway.app/products/${productId}/delete/`,
-  //       {
-  //         method: "DELETE",
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       }
-  //     );
-  //     if (res.status === 204) {
-  //       setProducts((prevProducts) =>
-  //         prevProducts.filter((p) => p.id !== productId)
-  //       );
-  //     } else {
-  //       const contentType = res.headers.get("Content-Type");
-  //       if (contentType && contentType.includes("application/json")) {
-  //         const data = await res.json();
-  //         alert(data.detail || "Failed to delete product.");
-  //       } else {
-  //         const text = await res.text();
-  //         console.error("Unexpected response:", text);
-  //         alert("Failed to delete product. Please check the server logs.");
-  //       }
-  //     }
-  //   } catch (err) {
-  //     console.error("Failed to delete product", err);
-  //     alert("Failed to delete product.");
-  //   }
-  // };
-
-
   const markProductAsSold = async (productId: number) => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -325,21 +270,21 @@ const Dashboard = () => {
     }
 
     const confirmMarkSold = window.confirm(
-        "Are you sure you want to mark this item as sold?"
+      "Are you sure you want to mark this item as sold?"
     );
     if (!confirmMarkSold) return;
 
     try {
       const res = await fetch(
-          `https://nitr-mart-production.up.railway.app/products/${productId}/`,
-          {
-            method: "PATCH",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({ is_sold: true }),
-          }
+        `https://nitr-mart-production.up.railway.app/products/${productId}/`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ is_sold: true }),
+        }
       );
 
       if (res.ok) {
@@ -365,13 +310,11 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black relative">
-
       {userLoading && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/80 backdrop-blur-sm">
-            <div className="animate-spin rounded-full h-16 w-16 border-4 border-cyan-500/20 border-t-cyan-500" />
-          </div>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/80 backdrop-blur-sm">
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-cyan-500/20 border-t-cyan-500" />
+        </div>
       )}
-
 
       {/* Background Stars */}
       <div className="fixed inset-0 pointer-events-none z-0">
@@ -417,9 +360,9 @@ const Dashboard = () => {
               <div className="flex items-center space-x-3">
                 <div className="w-10 h-10 bg-gradient-to-br from-cyan-400 to-emerald-600 rounded-xl flex items-center justify-center">
                   <img
-                      src="/logo.png"
-                      alt="NITR Mart Logo"
-                      className="w-full h-full object-cover"
+                    src="/logo.png"
+                    alt="NITR Mart Logo"
+                    className="w-full h-full object-cover"
                   />
                 </div>
                 <div>
@@ -443,10 +386,10 @@ const Dashboard = () => {
                   <Link href="/pages/profile/" className="block">
                     <div className="flex items-center space-x-4 bg-gradient-to-r from-slate-900 to-slate-800 rounded-xl px-5 py-2 border border-cyan-500/50 shadow-xl shadow-cyan-500/20 hover:ring-2 hover:ring-cyan-400/40 transition duration-200 cursor-pointer">
                       <div className="relative w-12 h-12 bg-gradient-to-tr from-cyan-400 to-green-600 rounded-lg flex items-center justify-center border border-cyan-300/60 shadow-lg shadow-cyan-400/40">
-                          <span className="text-sm font-bold text-white z-10">
-                            {user?.firstName?.charAt(0) || ""}
-                            {user?.lastName?.charAt(0) || ""}
-                          </span>
+                        <span className="text-sm font-bold text-white z-10">
+                          {user?.firstName?.charAt(0) || ""}
+                          {user?.lastName?.charAt(0) || ""}
+                        </span>
                         <div className="absolute inset-0 bg-gradient-to-tr from-cyan-400/20 to-blue-600/20 rounded-lg animate-ping"></div>
                       </div>
                       <div className="hidden sm:block">
@@ -456,9 +399,7 @@ const Dashboard = () => {
                         <p className="text-blue-400 text-xs font-mono tracking-wider">
                           Roll No: {user?.rollNo || ""}
                         </p>
-                        <button
-                            className="mt-1 text-xs text-cyan-200 hover:text-white underline underline-offset-4"
-                        >
+                        <button className="mt-1 text-xs text-cyan-200 hover:text-white underline underline-offset-4">
                           View/Edit
                         </button>
                       </div>
@@ -495,10 +436,10 @@ const Dashboard = () => {
                 <Link href="/pages/profile/" className="block">
                   <div className="flex items-center space-x-3 p-3 bg-gray-800/50 rounded-lg hover:ring-2 hover:ring-cyan-400/40 transition duration-200 cursor-pointer">
                     <div className="w-10 h-10 bg-gradient-to-br from-cyan-400 to-emerald-600 rounded-lg flex items-center justify-center">
-      <span className="text-sm font-bold text-white">
-        {user?.firstName?.charAt(0) || ""}
-        {user?.lastName?.charAt(0) || ""}
-      </span>
+                      <span className="text-sm font-bold text-white">
+                        {user?.firstName?.charAt(0) || ""}
+                        {user?.lastName?.charAt(0) || ""}
+                      </span>
                     </div>
                     <div>
                       <p className="text-white font-medium">
@@ -513,7 +454,6 @@ const Dashboard = () => {
                     </div>
                   </div>
                 </Link>
-
 
                 <button
                   onClick={() => {
@@ -667,11 +607,7 @@ const Dashboard = () => {
               </h2>
             </div>
 
-            {loading ? (
-              <div className="flex justify-center items-center py-32">
-                <div className="animate-spin rounded-full h-12 w-12 border-4 border-cyan-500/20 border-t-cyan-500" />
-              </div>
-            ) : (
+            
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                 {filteredProducts.length > 0 ? (
                   filteredProducts.map((product) => (
@@ -679,8 +615,10 @@ const Dashboard = () => {
                       key={product.id}
                       className="group flex flex-col bg-white/5 backdrop-blur-lg rounded-2xl border border-white/10 overflow-hidden hover:shadow-lg hover:border-cyan-500/50 transition-all duration-300"
                     >
-                      {/* Image */}
-                      <div className="relative h-48 bg-gray-800/50 overflow-hidden">
+                      <Link
+                        href={`/pages/productdetails/${product.id}`}
+                        className="relative h-48 bg-gray-800/50 overflow-hidden"
+                      >
                         {product.image ? (
                           <img
                             src={product.image}
@@ -704,7 +642,7 @@ const Dashboard = () => {
                             Negotiable
                           </div>
                         )}
-                      </div>
+                      </Link>
 
                       {/* Product Details */}
                       <div className="flex flex-col justify-between flex-1 p-5">
@@ -721,67 +659,67 @@ const Dashboard = () => {
                             {product.description}
                           </p>
                         </div>
+                      </div>
 
-                        {/* Seller */}
-                        <div className="flex items-center space-x-3 mb-5 p-3 rounded-lg bg-white/5">
-                          <div className="w-10 h-10 flex items-center justify-center bg-gradient-to-br from-cyan-400 to-emerald-600 text-white rounded-full font-semibold">
-                            {product.seller.name.charAt(0).toUpperCase()}
-                          </div>
-                          <div className="min-w-0">
-                            <p className="text-sm text-white truncate font-medium">
-                              {product.seller.name}
-                            </p>
-                            <p className="text-xs text-gray-400 truncate">
-                              {product.seller.roll_number} •{" "}
-                              {formatTimeAgo(product.posted_at)}
-                            </p>
-                          </div>
+                      {/* Seller */}
+                      <div className="flex items-center space-x-3 mb-5 p-3 rounded-lg bg-white/5">
+                        <div className="w-10 h-10 flex items-center justify-center bg-gradient-to-br from-cyan-400 to-emerald-600 text-white rounded-full font-semibold">
+                          {product.seller.name.charAt(0).toUpperCase()}
                         </div>
-
-                        {/* Actions */}
-                        <div className="space-y-2">
-                          <button
-                            onClick={() =>
-                              handleContactClick(product.seller, product.title)
-                            }
-                            className="w-full flex items-center justify-center px-4 py-3 bg-gradient-to-br from-sky-700 to-blue-800 text-white rounded-lg font-medium hover:from-sky-800 hover:to-blue-900 transition duration-200 shadow"
-                          >
-                            <FaWhatsapp className="w-4 h-4 mr-2" />
-                            Contact Seller
-                          </button>
-
-                          {user?.email === product.seller?.email && (
-                            <div className="flex gap-2">
-                              <button
-                                onClick={() => markProductAsSold(product.id)}
-                                className="flex-1 flex items-center justify-center px-3 py-2 rounded-lg font-semibold text-white bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 shadow"
-                              >
-                                <CheckCircle className="w-4 h-4 mr-1" />
-                                Sold
-                              </button>
-
-                              <button
-                                onClick={() =>
-                                  router.push(
-                                    `/pages/updateproduct/${product.id}`
-                                  )
-                                }
-                                className="flex-1 flex items-center justify-center px-3 py-2 rounded-lg font-semibold text-yellow-400 bg-yellow-500/10 hover:bg-yellow-500/20"
-                              >
-                                <Edit3 className="w-4 h-4 mr-1" />
-                                Edit
-                              </button>
-
-                              {/*<button*/}
-                              {/*  onClick={() => deleteProduct(product.id)}*/}
-                              {/*  className="flex-1 flex items-center justify-center px-3 py-2 rounded-lg font-semibold text-red-400 bg-red-700/10 hover:bg-red-700/20"*/}
-                              {/*>*/}
-                              {/*  <Trash2 className="w-4 h-4 mr-1" />*/}
-                              {/*  Delete*/}
-                              {/*</button>*/}
-                            </div>
-                          )}
+                        <div className="min-w-0">
+                          <p className="text-sm text-white truncate font-medium">
+                            {product.seller.name}
+                          </p>
+                          <p className="text-xs text-gray-400 truncate">
+                            {product.seller.roll_number} •{" "}
+                            {formatTimeAgo(product.posted_at)}
+                          </p>
                         </div>
+                      </div>
+
+                      {/* Actions */}
+                      <div className="space-y-2">
+                        <button
+                          onClick={() =>
+                            handleContactClick(product.seller, product.title)
+                          }
+                          className="w-full flex items-center justify-center px-4 py-3 bg-gradient-to-br from-sky-700 to-blue-800 text-white rounded-lg font-medium hover:from-sky-800 hover:to-blue-900 transition duration-200 shadow"
+                        >
+                          <FaWhatsapp className="w-4 h-4 mr-2" />
+                          Contact Seller
+                        </button>
+
+                        {user?.email === product.seller?.email && (
+                          <div className="flex gap-2">
+                            <button
+                              onClick={() => markProductAsSold(product.id)}
+                              className="flex-1 flex items-center justify-center px-3 py-2 rounded-lg font-semibold text-white bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 shadow"
+                            >
+                              <CheckCircle className="w-4 h-4 mr-1" />
+                              Sold
+                            </button>
+
+                            <button
+                              onClick={() =>
+                                router.push(
+                                  `/pages/updateproduct/${product.id}`
+                                )
+                              }
+                              className="flex-1 flex items-center justify-center px-3 py-2 rounded-lg font-semibold text-yellow-400 bg-yellow-500/10 hover:bg-yellow-500/20"
+                            >
+                              <Edit3 className="w-4 h-4 mr-1" />
+                              Edit
+                            </button>
+
+                            {/*<button*/}
+                            {/*  onClick={() => deleteProduct(product.id)}*/}
+                            {/*  className="flex-1 flex items-center justify-center px-3 py-2 rounded-lg font-semibold text-red-400 bg-red-700/10 hover:bg-red-700/20"*/}
+                            {/*>*/}
+                            {/*  <Trash2 className="w-4 h-4 mr-1" />*/}
+                            {/*  Delete*/}
+                            {/*</button>*/}
+                          </div>
+                        )}
                       </div>
                     </div>
                   ))
@@ -802,7 +740,6 @@ const Dashboard = () => {
                   </div>
                 )}
               </div>
-            )}
           </div>
         </main>
       </div>

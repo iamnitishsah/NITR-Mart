@@ -1,5 +1,5 @@
 "use client";
-import { Shield, Users, CheckCircle2, AlertTriangle, Mail, Phone, MapPin, Eye, Lock, HeartHandshake } from "lucide-react";
+import { Shield, Users, CheckCircle2, AlertTriangle, Mail, MapPin, Eye, Lock, HeartHandshake } from "lucide-react";
 
 export default function SafetyGuidelines() {
   const guidelines = [
