@@ -1,18 +1,23 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from .models import Product, CATEGORIES
+from .models import Product, CATEGORIES, ProductImage
 
 User = get_user_model()
 
+class ProductImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductImage
+        fields = ['id', 'image']
+
 class ProductSerializer(serializers.ModelSerializer):
     seller = serializers.SerializerMethodField()
-    image = serializers.ImageField(required=False, allow_null=True)
+    images = ProductImageSerializer(many=True, read_only=True)
     category = serializers.ChoiceField(choices=CATEGORIES)
 
     class Meta:
         model = Product
         fields = [
-            'id', 'title', 'description', 'price', 'negotiable', 'image',
+            'id', 'title', 'description', 'price', 'negotiable', 'images',
             'category', 'seller', 'is_sold', 'posted_at'
         ]
         read_only_fields = ['id', 'seller', 'posted_at', 'is_sold']
@@ -31,13 +36,15 @@ class ProductSerializer(serializers.ModelSerializer):
         return value
 
 class ProductCreateSerializer(serializers.ModelSerializer):
-    image = serializers.ImageField(required=False, allow_null=True)
+    images = serializers.ListField(
+        child=serializers.ImageField(), write_only=True, required=False
+    )
     category = serializers.ChoiceField(choices=CATEGORIES)
 
     class Meta:
         model = Product
         fields = [
-            'title', 'description', 'price', 'negotiable', 'image',
+            'title', 'description', 'price', 'negotiable', 'images',
             'category'
         ]
 
@@ -47,17 +54,23 @@ class ProductCreateSerializer(serializers.ModelSerializer):
         return value
 
     def create(self, validated_data):
+        images_data = validated_data.pop('images', [])
         validated_data['seller'] = self.context['request'].user
-        return Product.objects.create(**validated_data)
+        product = Product.objects.create(**validated_data)
+        for image in images_data:
+            ProductImage.objects.create(product=product, image=image)
+        return product
 
 class ProductUpdateSerializer(serializers.ModelSerializer):
-    image = serializers.ImageField(required=False, allow_null=True)
+    images = serializers.ListField(
+        child=serializers.ImageField(), write_only=True, required=False
+    )
     category = serializers.ChoiceField(choices=CATEGORIES, required=False)
 
     class Meta:
         model = Product
         fields = [
-            'title', 'description', 'price', 'negotiable', 'image',
+            'title', 'description', 'price', 'negotiable', 'images',
             'category', 'is_sold'
         ]
         read_only_fields = ['seller']
@@ -66,3 +79,13 @@ class ProductUpdateSerializer(serializers.ModelSerializer):
         if value < 0:
             raise serializers.ValidationError('Price cannot be negative.')
         return value
+
+    def update(self, instance, validated_data):
+        images_data = validated_data.pop('images', None)
+        instance = super().update(instance, validated_data)
+        if images_data is not None:
+            # Delete existing images and add new ones
+            instance.images.all().delete()
+            for image in images_data:
+                ProductImage.objects.create(product=instance, image=image)
+        return instance

@@ -1,7 +1,7 @@
 from rest_framework import generics, permissions
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Product
+from .models import Product, ProductImage
 from .serializers import ProductSerializer, ProductCreateSerializer, ProductUpdateSerializer
 
 class ProductListCreateView(generics.ListCreateAPIView):
@@ -15,6 +15,19 @@ class ProductListCreateView(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(seller=self.request.user)
+
+    def create(self, request, *args, **kwargs):
+        images = request.FILES.getlist('images')
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        product = serializer.save(seller=request.user)
+        if images:
+            product.image = images[0]
+            product.save(update_fields=['image'])
+        for image in images:
+            ProductImage.objects.create(product=product, image=image)
+        headers = self.get_success_headers(serializer.data)
+        return Response(ProductSerializer(product).data, status=status.HTTP_201_CREATED, headers=headers)
 
 class ProductRetrieveUpdateView(generics.RetrieveUpdateAPIView):
     queryset = Product.objects.all()
@@ -30,9 +43,16 @@ class ProductRetrieveUpdateView(generics.RetrieveUpdateAPIView):
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
+        images = request.FILES.getlist('images')
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
+        if images:
+            instance.images.all().delete()
+            instance.image = images[0]
+            instance.save(update_fields=['image'])
+            for image in images:
+                ProductImage.objects.create(product=instance, image=image)
         return Response(ProductSerializer(instance).data, status=status.HTTP_200_OK)
 
 class ProductDeleteView(generics.DestroyAPIView):

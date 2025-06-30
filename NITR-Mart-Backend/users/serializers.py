@@ -253,32 +253,3 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
-
-class PasswordResetConfirmSerializer(serializers.Serializer):
-    email = serializers.EmailField(required=True)
-    new_password = serializers.CharField(
-        write_only=True,
-        required=True,
-        min_length=8,
-        style={'input_type': 'password'},
-        help_text='New password must be at least 8 characters'
-    )
-    confirm_password = serializers.CharField(
-        write_only=True,
-        required=True,
-        min_length=8,
-        style={'input_type': 'password'},
-        help_text='Confirm new password'
-    )
-    def validate(self, data):
-        email = data.get('email')
-        new_password = data.get('new_password')
-        confirm_password = data.get('confirm_password')
-        try:
-            user = User.objects.get(email=email)
-        except User.DoesNotExist:
-            raise serializers.ValidationError({'email': 'No user found with this email address.'})
-        if new_password != confirm_password:
-            raise serializers.ValidationError({'confirm_password': 'New password and confirm password do not match.'})
-        data['user'] = user
-        return data

@@ -9,7 +9,6 @@ from .serializers import (
     UserSerializer,
     UserCreateSerializer,
     UserUpdateSerializer,
-     PasswordResetConfirmSerializer
 )
 
 User = get_user_model()
@@ -166,26 +165,3 @@ class CurrentUserView(APIView):
     def get(self, request):
         serializer = UserSerializer(request.user)
         return Response(serializer.data, status=status.HTTP_200_OK)
-
-class PasswordResetConfirmView(generics.CreateAPIView):
-    """
-    POST: Confirm password reset and set new password.
-    """
-    serializer_class = PasswordResetConfirmSerializer
-    permission_classes = [permissions.AllowAny]
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()  # This will set the new password
-        return Response({'detail': 'Password reset successfully.'}, status=status.HTTP_200_OK)
-    
-    
-class CheckEmailView(APIView):
-    permission_classes = [permissions.AllowAny]
-    def post(self, request, *args, **kwargs):
-        email = request.data.get('email')
-        if not email:
-            return Response({'detail': 'Email is required.'}, status=status.HTTP_400_BAD_REQUEST)
-        if User.objects.filter(email=email).exists():
-            return Response({'detail': 'Email is registered.'}, status=status.HTTP_200_OK)
-        return Response({'detail': 'Email is not registered.'}, status=status.HTTP_404_NOT_FOUND)
