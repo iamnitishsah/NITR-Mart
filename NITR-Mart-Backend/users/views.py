@@ -8,7 +8,7 @@ from .serializers import (
     OTPVerifySerializer,
     UserSerializer,
     UserCreateSerializer,
-    UserUpdateSerializer
+    UserUpdateSerializer,
 )
 
 User = get_user_model()

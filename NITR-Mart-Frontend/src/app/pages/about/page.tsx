@@ -1,6 +1,6 @@
 'use client'
 import React from 'react';
-import { Users, Shield, Heart, BookOpen, Laptop, Bike, Home, Gift } from 'lucide-react';
+import { Users, Shield, Heart, BookOpen, Laptop, Bike, Home, Gift,ArrowLeft  } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 const AboutPage = () => {
@@ -15,6 +15,12 @@ const AboutPage = () => {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white">
+                   <button
+                onClick={() => router.push("/pages/welcome")}
+                className="absolute left-4 top-8 p-3 text-gray-400 hover:text-white hover:bg-white/10 rounded-xl transition-all duration-300"
+              >
+                <ArrowLeft className="w-6 h-6" />
+              </button>
             {/* Hero Section */}
             <section className="py-20 px-4 text-center">
                 <div className="max-w-4xl mx-auto">

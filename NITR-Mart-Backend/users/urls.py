@@ -18,4 +18,6 @@ urlpatterns = [
     path('token/refresh/', TokenRefreshView.as_view(), name='token-refresh'),
     path('send-otp/', OTPSendView.as_view(), name='send-otp'),
     path('verify-otp/', OTPVerifyView.as_view(), name='verify-otp'),
+
 ]
+

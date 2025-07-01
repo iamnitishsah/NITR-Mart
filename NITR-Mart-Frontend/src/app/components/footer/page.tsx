@@ -10,11 +10,11 @@ import {
   BookOpen,
   Laptop,
   Coffee,
-  Gamepad2,
   Shield,
   HelpCircle,
   FileText,
-  Zap
+  Zap,
+  
 } from 'lucide-react';
 import { RiTwitterXFill,RiInstagramLine,RiLinkedinFill,RiGithubLine } from "react-icons/ri";
 
@@ -22,22 +22,21 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   const quickLinks = [
-    { name: 'Dashboard', href: '/dashboard', icon: Users },
+    { name: 'About', href: '/pages/about', icon: Users },
+    { name: 'Dashboard', href: '/pages/dashboard', icon: Users },
     { name: 'Sell Item', href: '/pages/sell', icon: Zap },
-    { name: 'Browse Products', href: '/products', icon: BookOpen },
-    { name: 'My Account', href: '/profile', icon: Users },
+    { name: 'My Account', href: '/pages/profile', icon: Users },
   ];
 
   const categories = [
     { name: 'Books & Notes', href: '/category/textbooks', icon: BookOpen },
     { name: 'Electronics & Tech', href: '/category/electronics', icon: Laptop },
     { name: 'Furniture', href: '/category/furniture', icon: Coffee },
-    { name: 'Gaming & Entertainment', href: '/category/gaming', icon: Gamepad2 },
   ];
 
   const support = [
-    { name: 'Help Center', href: '/help', icon: HelpCircle },
-    { name: 'Safety Guidelines', href: '/safety', icon: Shield },
+    { name: 'Help Center', href: '/pages/contact', icon: HelpCircle },
+    { name: 'Safety Guidelines', href: '/pages/safety', icon: Shield },
     { name: 'Terms of Service', href: '/terms', icon: FileText },
     { name: 'Privacy Policy', href: '/privacy', icon: Shield },
   ];
@@ -63,7 +62,7 @@ const Footer = () => {
     },
     {
       name: 'LinkedIn',
-      href: 'https://www.linkedin.com/in/iamnitishsah',
+      href: 'https://www.linkedin.com/in/sanchita-priyadarshinee-9912b6282',
       icon: RiLinkedinFill,
       color: 'hover:text-sky-500'
     },

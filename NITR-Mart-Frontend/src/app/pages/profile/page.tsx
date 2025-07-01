@@ -9,7 +9,8 @@ import {
     Save,
     X,
     ChevronDown,
-    ChevronUp
+    ChevronUp,
+    ArrowLeft
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
@@ -232,9 +233,16 @@ const ProfilePage = () => {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white">
+            
             {/* Header */}
             <div className="bg-gray-900/80 backdrop-blur-xl border-b border-gray-700/50 py-6">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+                    <button
+                onClick={() => router.push("/pages/dashboard")}
+                className="absolute left-4 top-8 p-3 text-gray-400 hover:text-white hover:bg-white/10 rounded-xl transition-all duration-300"
+              >
+                <ArrowLeft className="w-6 h-6" />
+              </button>
                     <h1 className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-emerald-400 bg-clip-text text-transparent">
                         My Profile
                     </h1>
